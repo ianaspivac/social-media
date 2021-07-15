@@ -6,8 +6,8 @@ const Header = () => {
             <ul>
                 <li><Link to='/feed'>Feed</Link></li>
                 <li><button>Logout</button></li>
-                <li><Link to='/authentification'>Sign in</Link></li>
-                <li><Link to='/authentification'>Sign up</Link></li>
+                <li><Link to='/login'>Login</Link></li>
+                <li><Link to='/signup'>Sign up</Link></li>
             </ul>
         </nav>
     </header>);
