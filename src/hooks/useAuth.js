@@ -27,13 +27,14 @@ const useAuth = () => {
       })
       .then((data) => {
         dispatch({ type: "LOGIN", token: data.idToken });
-        console.log(data.idToken);
+        localStorage.setItem("token", data.idToken);
         history.replace("/feed");
       })
       .catch((err) => {
         alert(err.message);
       });
-  };
+      
+  };   
   return {login};
 };
 export default useAuth;
