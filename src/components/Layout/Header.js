@@ -1,13 +1,13 @@
 import { Link, useHistory } from "react-router-dom";
 import "./Header.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import useAuth from "../../hooks/useAuth";
 const Header = () => {
   const history = useHistory();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
-  const dispatch = useDispatch();
+  const {logout} = useAuth();
   const logoutHandler = () => {
-    dispatch({ type: "LOGOUT" });
-    localStorage.removeItem("token");
+    logout();
     history.replace("/");
   };
   return (
@@ -22,12 +22,16 @@ const Header = () => {
               <button onClick={logoutHandler}>Logout</button>
             </li>
           )}
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/signup">Sign up</Link>
-          </li>
+          {!isLoggedIn && (
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+          )}
+          {!isLoggedIn && (
+            <li>
+              <Link to="/signup">Sign up</Link>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

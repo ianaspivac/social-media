@@ -1,8 +1,8 @@
 import "./App.css";
 import Header from "./components/Layout/Header";
-import { Switch, Route,Redirect } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Authentification from "./pages/Authentication";
-import { useSelector } from "react-redux";
+import { useSelector} from "react-redux";
 import Landing from "./pages/Landing";
 
 function App() {
