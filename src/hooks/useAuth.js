@@ -43,10 +43,13 @@ const useAuth = () => {
         } else {
           res.json().then((data) => {
             if (data.error.message === "EMAIL_EXISTS"){
-              dispatch({type:'IS_ERROR',boolean:true});
+              dispatch({type:'EMAIL_EXISTS',boolean:true});
             }
             if (data.error.message === "EMAIL_NOT_FOUND"){
-              dispatch({type:'IS_ERROR',boolean:true});
+              dispatch({type:'EMAIL_NOT_FOUND',boolean:true});
+            }
+            if(data.error.message === "INVALID_PASSWORD"){
+              dispatch({type:'INVALID_PASSWORD',boolean:true});
             }
             console.log(data.error);
           });

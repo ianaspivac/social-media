@@ -3,7 +3,9 @@ import { createStore } from "redux";
 const initialState = {
   token: localStorage.getItem("token"),
   isLoggedIn: !!localStorage.getItem("token"),
-  isErrorEmail: false,
+  isErrorEmailExists: false,
+  isPasswordValid:false,
+  isErrorEmailNotFound:false
 };
 
 const authReducer = (state = initialState, action) => {
@@ -16,11 +18,18 @@ const authReducer = (state = initialState, action) => {
       };
     case "LOGOUT":
       return { ...state, token: "", isLoggedIn: false };
-    case "IS_ERROR":
+    case "EMAIL_EXISTS":
       return {
         ...state,
-        isErrorEmail: action.boolean,
+        isErrorEmailExists: action.boolean,
       };
+      case "EMAIL_NOT_FOUND":
+      return {
+        ...state,
+        isErrorEmailNotFound: action.boolean,
+      };
+      case "INVALID_PASSWORD":
+        return{...state,isPasswordValid:action.boolean};
     default:
       return state;
   }

@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import {useSelector} from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import "./AuthForm.css";
 import useAuth from "../../hooks/useAuth";
 const Signup = () => {
-  const isEmailExistent =useSelector((state)=>state.isErrorEmail);
+  const dispatch = useDispatch();
   const { login } = useAuth();
+  const isEmailExistent = useSelector((state) => state.isErrorEmailExists);
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,7 +24,7 @@ const Signup = () => {
     setValidEmail(!pattern.test(email));
     setMatchPass(password !== confirmPassword);
     setLengthPass(password.length < 6);
-    return (matchPass || lengthPass || validEmail);
+    return matchPass || lengthPass || validEmail;
   };
   useEffect(() => {
     setDisable(validatingForm());
@@ -39,6 +41,7 @@ const Signup = () => {
     }
   };
   const emailHandler = (event) => {
+    dispatch({ type: "EMAIL_EXISTS", boolean: false });
     setEmail(event.target.value);
   };
   const passwordHandler = (event) => {
