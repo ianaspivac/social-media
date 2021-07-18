@@ -77,7 +77,7 @@ const Signup = () => {
         />
         {matchPass && <p>Passwords do not match</p>}
         <div>
-          <input type="submit" value="Sign up" disabled={disable} />
+          <input type="submit" value="Continue" disabled={disable} />
           <Link to="/login">Have account already?</Link>
         </div>
       </div>

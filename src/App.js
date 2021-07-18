@@ -2,8 +2,8 @@ import "./App.css";
 import Header from "./components/Layout/Header";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Authentification from "./pages/Authentication";
-import { useSelector} from "react-redux";
-import Landing from "./pages/Landing";
+import { useSelector } from "react-redux";
+import Feed from "./pages/Feed";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
@@ -12,7 +12,16 @@ function App() {
       <Header />
       <Switch>
         <Route path="/" exact>
-          <Landing />
+          {!isLoggedIn && (
+            <Redirect to="/login">
+              <Authentification />
+            </Redirect>
+          )}
+          {isLoggedIn && (
+            <Redirect to="/feed">
+              <Feed />
+            </Redirect>
+          )}
         </Route>
         {!isLoggedIn && (
           <Route path="/login">
@@ -24,7 +33,11 @@ function App() {
             <Authentification />
           </Route>
         )}
-        {isLoggedIn && <Route path="/feed"></Route>}
+        {isLoggedIn && (
+          <Route path="/feed">
+            <Feed />
+          </Route>
+        )}
         <Route path="*">
           <Redirect to="/" />
         </Route>

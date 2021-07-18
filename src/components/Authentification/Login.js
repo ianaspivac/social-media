@@ -17,12 +17,13 @@ const Login = () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
     dispatch({type:'EMAIL_NOT_FOUND',boolean:false});
-    dispatch({type:'INVALID_PASSWORD',boolean:true});
+    dispatch({type:'INVALID_PASSWORD',boolean:false});
     login(
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI",
       enteredEmail,
       enteredPassword
     );
+   
   };
   return (
     <form onSubmit={loginHandler}>
