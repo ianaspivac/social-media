@@ -51,34 +51,33 @@ const Signup = () => {
     setConfirmPassword(event.target.value);
   };
   return (
-    <form onSubmit={signupHandler}>
-      <div>
+    <form onSubmit={signupHandler} className="authentification-form">
+      <div className="authentification-form__name">
         <h1>Sign up</h1>
       </div>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input type="email" value={email} onChange={emailHandler} required />
-        {isEmailExistent && <p>Email exists already</p>}
-        {validEmail && <p>Email is not valid</p>}
-        <label htmlFor="password">Password</label>
-        <input
+      <div className="authentification-form__inputs">
+        <input className={isEmailExistent || validEmail ? 'invalid': ''} type="email" value={email} onChange={emailHandler} required />
+        {isEmailExistent && <p className="authentification-form__invalid">Email exists already</p>}
+        {validEmail && <p className="authentification-form__invalid">Email is not valid</p>}
+        <input className={lengthPass ? 'invalid': ''}
           type="password"
           value={password}
           onChange={passwordHandler}
           required
         />
-        {lengthPass && <p>Password is shorter than 6 characters</p>}
-        <label htmlFor="password-confirmation">Confirm Password</label>
+        {lengthPass && <p className="authentification-form__invalid">Password is shorter than 6 characters</p>}
+
         <input
+        className={matchPass ? 'invalid': ''}
           type="password"
           value={confirmPassword}
           onChange={confirmPasswordHandler}
           required
         />
-        {matchPass && <p>Passwords do not match</p>}
-        <div>
-          <input type="submit" value="Continue" disabled={disable} />
-          <Link to="/login">Have account already?</Link>
+        {matchPass && <p className="authentification-form__invalid">Passwords do not match</p>}
+        <div className="authentification-form__actions">
+          <input type="submit" value="Sign up" className="authentification-form__submit" disabled={disable} />
+          <Link to="/login" className="authentification-form__link">Have account already?</Link>
         </div>
       </div>
     </form>

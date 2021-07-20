@@ -26,20 +26,18 @@ const Login = () => {
    
   };
   return (
-    <form onSubmit={loginHandler}>
-      <div>
+    <form onSubmit={loginHandler} className="authentification-form">
+      <div className="authentification-form__name" >
         <h1>Login</h1>
       </div>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input type="email" ref={emailInputRef} required />
-        {isEmailExistent && <p>Invalid email</p>}
-        <label htmlFor="password">Password</label>
-        <input type="password" ref={passwordInputRef} required />
-        {isPasswordValid && <p>Invalid password</p>}
-        <div>
-          <input type="submit" value="Sign in" />
-          <Link to="/signup">Create account</Link>
+      <div className="authentification-form__inputs">
+        <input className={isEmailExistent ? 'invalid' : ''} type="email" ref={emailInputRef} placeholder="Email" required />
+        {isEmailExistent && <p className="authentification-form__invalid">Invalid email</p>}
+        <input className={isPasswordValid ? 'invalid' : ''}  type="password" ref={passwordInputRef} placeholder="Password" required />
+        {isPasswordValid && <p className="authentification-form__invalid">Invalid password</p>}
+        <div className="authentification-form__actions">
+          <input type="submit" className="authentification-form__submit" value="Sign in" />
+          <Link to="/signup" className="authentification-form__link">Create account</Link>
         </div>
       </div>
     </form>

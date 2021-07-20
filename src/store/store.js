@@ -9,10 +9,9 @@ const initialState = {
     photoUrl: localStorage.getItem("photoUrl"),
     displayName: localStorage.getItem("displayName"),
   },
-
   isErrorEmailExists: false,
   isPasswordValid: false,
-  isErrorEmailNotFound: false,
+  isErrorEmailNotFound: false
 };
 
 const authReducer = (state = initialState, action) => {

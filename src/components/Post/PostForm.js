@@ -1,4 +1,4 @@
-import { useRef, useState, useReducer } from "react";
+import { useRef, useState, useReducer, useEffect } from "react";
 import { useSelector } from "react-redux";
 import "./PostForm.css";
 import DragAndDrop from "../UI/DragAndDrop";
@@ -17,14 +17,14 @@ const reducer = (state, action) => {
 const PostForm = () => {
   const idToken = useSelector((state) => state.userInfo.token);
   const userId = useSelector((state) => state.userInfo.userId);
-  const photoUrl = useSelector((state) => state.userInfo.photoUrl);
-  const displayName = useSelector(state=>state.userInfo.displayName);
+  const [photoUrl,setPhotoUrl] = useState(useSelector((state) => state.userInfo.photoUrl));
+  const displayName = useSelector((state) => state.userInfo.displayName);
+  const [isLoading, setIsLoading] = useState(true);
   const textInputRef = useRef();
-
   const [data, dispatch] = useReducer(reducer, {
     dropDepth: 0,
     inDropZone: false,
-    fileList: []
+    fileList: [],
   });
   const postHandler = (event) => {
     event.preventDefault();
@@ -48,9 +48,27 @@ const PostForm = () => {
       }
     });
   };
+  useEffect(() => {
+    if (localStorage.getItem("photoUrl") !== null) {
+      setIsLoading(false);
+      setPhotoUrl(localStorage.getItem('photoUrl'));
+    } else {
+      setIsLoading(true);
+    }
+  }, [photoUrl]);
   return (
     <div>
-      <div><div><img src={photoUrl} alt="profile pic" /> </div><div>{displayName.substring(0, displayName.indexOf("@"))}</div></div>
+      {isLoading ? (
+        <p>Loading</p>
+      ) : (
+        <div>
+          <div>
+            <img src={photoUrl} alt="profile pic" />{" "}
+          </div>
+          <div>{displayName}</div>
+        </div>
+      )}
+
       <form onSubmit={postHandler}>
         <textarea ref={textInputRef} rows="4" cols="50" />
         <DragAndDrop data={data} dispatch={dispatch} />
@@ -58,7 +76,11 @@ const PostForm = () => {
       </form>
       <ul className="dropped-files">
         {data.fileList.map((file) => {
-          return <li key={file.files[0].name}><img src={file.fileSrc} alt={file.files[0].name}/></li>;
+          return (
+            <li key={file.files[0].name}>
+              <img src={file.fileSrc} alt={file.files[0].name} />
+            </li>
+          );
         })}
       </ul>
     </div>

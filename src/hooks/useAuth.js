@@ -41,7 +41,7 @@ const fetchProfileInfo = (token) => {
       console.log(data);
       localStorage.setItem("email", data.users[0].email);
       if(!data.users[0].displayName){
-        localStorage.setItem("displayName", data.users[0].email);
+        localStorage.setItem("displayName", data.users[0].email.substring(0, data.users[0].email.indexOf("@")));
       }
       else{
         localStorage.setItem("displayName", data.users[0].displayName); 
@@ -137,7 +137,6 @@ const useAuth = () => {
     if (duration) {
       setLogoutTimer(setTimeout(logout, duration));
     }
-    return () => {};
   }, [setLogoutTimer]);
   return { login, logout };
 };

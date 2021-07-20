@@ -4,9 +4,11 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Authentification from "./pages/Authentication";
 import { useSelector } from "react-redux";
 import Feed from "./pages/Feed";
+import Profile from "./pages/Profile";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  //TODO:add loading where it is needed
   return (
     <main>
       <Header />
@@ -31,6 +33,11 @@ function App() {
         {!isLoggedIn && (
           <Route path="/signup">
             <Authentification />
+          </Route>
+        )}
+         {isLoggedIn && (
+          <Route path="/profile">
+           <Profile/>
           </Route>
         )}
         {isLoggedIn && (
