@@ -11,7 +11,7 @@ const initialState = {
   },
   isErrorEmailExists: false,
   isPasswordValid: false,
-  isErrorEmailNotFound: false
+  isErrorEmailNotFound: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -40,6 +40,8 @@ const authReducer = (state = initialState, action) => {
         },
         isLoggedIn: false,
       };
+    case "CHANGE_NAME":
+      return {...state,displayName:action.displayName};
     case "EMAIL_EXISTS":
       return {
         ...state,

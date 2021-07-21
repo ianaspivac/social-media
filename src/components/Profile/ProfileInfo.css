@@ -1,3 +1,110 @@
-.profile{
-    background-color:var(--theme-secondary-color);
+.profile {
+  margin: 20px auto;
+  padding: 50px;
+  background-color: var(--theme-secondary-color);
+  width: 600px;
+  height: 270px;
+  display: flex;
+  border-radius: 5px;
+  color: white;
+  box-shadow: 0px 7px 17px -6px rgba(176, 167, 176, 1);
+  --profile-image-size: 200px;
+}
+.profile-edit-name-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+@keyframes edit-button-hover {
+  from {
+    opacity:1;
+  }
+  to {
+    opacity:0.3;
+  }
+}
+.profile-edit-name-button img:hover,.profile-edit-photo-button img:hover {
+  animation-name: edit-button-hover;
+  animation-duration: 0.2s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+.profile-edit-name-button img {
+  width: 15px;
+}
+.profile-image {
+  height: var(--profile-image-size);
+  width: var(--profile-image-size);
+}
+.profile-image img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 1%;
+  border: 3px solid #9b9ece;
+}
+.profile-edit-name {
+  display: flex;
+  margin-bottom: 10px;
+}
+.profile-edit-name input,
+.profile-name {
+  margin-right: 30px;
+  font-size: 20px;
+}
+.profile-email {
+  font-size: 14px;
+}
+.profile-edit-name input {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  font-family: "Open Sans", sans-serif;
+  box-shadow: 0 1px 0 #ffffff;
+  color: white;
+}
+.profile-edit-name-buttons-div {
+  display: flex;
+}
+.profile-edit-name-buttons-div button img,.profile-edit-photo-buttons-div button img {
+  width: 12px;
+}
+.profile-edit-photo-buttons-div button img{
+    border:none;
+}
+.profile-image-side {
+  margin-right: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.profile-name-error {
+  font-size: 12px;
+  color: rgb(252, 98, 98);
+}
+
+.profile-image input[type="file"]::file-selector-button,
+.profile-chnage-photo-button {
+  margin-top: 5px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-size: 0.8em;
+  width: var(--profile-image-size);
+}
+.profile-image input[type="file"]::file-selector-button:hover,
+.profile-chnage-photo-button:hover {
+  text-shadow: 0 0 1px #ffffff;
+  background-color: #0000000c;
+}
+.profile-edit-photo-buttons-div{
+    border:none;
+    margin-top:10px;
+}
+.profile-image-photo-edit{
+    display: flex;
+    flex-direction: column;
 }

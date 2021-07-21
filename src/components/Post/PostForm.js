@@ -17,10 +17,15 @@ const reducer = (state, action) => {
 const PostForm = () => {
   const idToken = useSelector((state) => state.userInfo.token);
   const userId = useSelector((state) => state.userInfo.userId);
-  const [photoUrl,setPhotoUrl] = useState(useSelector((state) => state.userInfo.photoUrl));
-  const displayName = useSelector((state) => state.userInfo.displayName);
+  const [photoUrl, setPhotoUrl] = useState(
+    useSelector((state) => state.userInfo.photoUrl)
+  );
+  const [displayName, setDisplayName] = useState(
+    useSelector((state) => state.userInfo.displayName)
+  );
   const [isLoading, setIsLoading] = useState(true);
   const textInputRef = useRef();
+
   const [data, dispatch] = useReducer(reducer, {
     dropDepth: 0,
     inDropZone: false,
@@ -29,11 +34,13 @@ const PostForm = () => {
   const postHandler = (event) => {
     event.preventDefault();
     const enteredText = textInputRef.current.value;
+    const { fileList } = data;
+    const filesSrc = fileList.map((file) => file.fileSrc);
     fetch(
       `https://react-http-560ff-default-rtdb.firebaseio.com/posts/${userId}.json?auth=${idToken}`,
       {
         method: "POST",
-        body: JSON.stringify(enteredText),
+        body: JSON.stringify({ enteredText, filesSrc }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -48,26 +55,14 @@ const PostForm = () => {
       }
     });
   };
-  useEffect(() => {
-    if (localStorage.getItem("photoUrl") !== null) {
-      setIsLoading(false);
-      setPhotoUrl(localStorage.getItem('photoUrl'));
-    } else {
-      setIsLoading(true);
-    }
-  }, [photoUrl]);
   return (
     <div>
-      {isLoading ? (
-        <p>Loading</p>
-      ) : (
+      <div>
         <div>
-          <div>
-            <img src={photoUrl} alt="profile pic" />{" "}
-          </div>
-          <div>{displayName}</div>
+          <img src={photoUrl} alt="profile pic" />
         </div>
-      )}
+        <div>{displayName}</div>
+      </div>
 
       <form onSubmit={postHandler}>
         <textarea ref={textInputRef} rows="4" cols="50" />

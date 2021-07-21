@@ -1,26 +1,196 @@
 import "./ProfileInfo.css";
 import { useSelector, useDispatch } from "react-redux";
-import edit from '../../assets/images/edit.svg';
+import edit from "../../assets/images/edit.svg";
+import tick from "../../assets/images/tick.svg";
+import close from "../../assets/images/close.svg";
+import { useState, useRef, useEffect } from "react";
+import firebase from "../../Firebase/Firebase";
 const ProfileInfo = () => {
-  const displayName = useSelector((state) => state.userInfo.displayName);
+  const dispatch = useDispatch();
+
+  const uploadedFileInput = useRef();
+
+  const [displayName, setDisplayName] = useState(
+    useSelector((state) => state.userInfo.displayName)
+  );
+  const [enteredName, setEnteredName] = useState(displayName);
+  const [isPhotoEdit, setIsPhotoEdit] = useState(false);
+  const [isPhotoAdded, setIsPhotoAdded] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEnteredNameValid, setIsEnteredNameValid] = useState(true);
+  const [photoUrl, setPhotoUrl] = useState(
+    useSelector((state) => state.userInfo.photoUrl)
+  );
   const email = useSelector((state) => state.userInfo.email);
-  const photoUrl = useSelector((state) => state.userInfo.photoUrl);
-  const nameEditHandler =()=>{};
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+
+  const validateEnteredName = (name) => {
+    return name.length < 21 && name.length > 0;
+  };
+  const nameEditHandler = () => {
+    setIsEnteredNameValid(true);
+    setIsEditing((isEditing) => !isEditing);
+  };
+  const photoEditHandler = () => {
+    setIsPhotoAdded(false);
+    setPhotoUrl(localStorage.getItem("photoUrl"));
+    setIsPhotoEdit((isPhotoEdit) => !isPhotoEdit);
+  };
+  const photoPreviewHandler = (event) => {
+    const file = event.target.files[0];
+    setIsPhotoAdded(true);
+    var storage = firebase.storage();
+    var storageRef = storage.ref();
+    var uploadTask = storageRef
+      .child(`avatars/${userId}/${file.name}`)
+      .put(file);
+
+    uploadTask.on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      (snapshot) => {},
+      (error) => {
+        throw error;
+      },
+      () => {
+        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+          setPhotoUrl(url);
+        });
+      }
+    );
+  };
+  const nameHandler = (event) => {
+    setEnteredName(event.target.value);
+  };
+  const fetchEditedData = (bodyFetch) => {
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI",
+      {
+        method: "POST",
+        body: JSON.stringify(bodyFetch),
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          res.json().then((data) => {});
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  const nameSaveHandler = () => {
+    if (!validateEnteredName(enteredName)) {
+      setIsEnteredNameValid(false);
+      return;
+    } else setIsEnteredNameValid(true);
+    localStorage.removeItem("displayName");
+    localStorage.setItem("displayName", enteredName);
+    fetchEditedData({
+      idToken: token,
+      displayName: enteredName,
+      returnSecureToken: true,
+    });
+    nameEditHandler();
+    setDisplayName(enteredName);
+  };
+
+  const photoSaveHandler = (event) => {
+    localStorage.removeItem("photoURL");
+    localStorage.setItem("photoUrl", photoUrl);
+    fetchEditedData({
+      idToken: token,
+      photoUrl,
+      returnSecureToken: true,
+    });
+  };
+
   return (
     <div className="profile">
       <div className="profile-image-side">
         <div className="profile-image">
           <img src={photoUrl} alt="avatar" />
-          <input
-            type="file"
-            name="avatar"
-            accept="image/png, image/jpeg, image/jpg"
-          />
+          <div className="profile-image-photo-edit">
+            {isPhotoEdit ? (
+              <input
+                type="file"
+                name="avatar"
+                accept="image/png, image/jpeg, image/jpg"
+                ref={uploadedFileInput}
+                onChange={photoPreviewHandler}
+              />
+            ) : (
+              <button
+                className="profile-chnage-photo-button"
+                onClick={photoEditHandler}
+              >
+                Change photo
+              </button>
+            )}
+            {isPhotoEdit && (
+              <div className="profile-edit-photo-buttons-div">
+                {isPhotoAdded && (
+                  <button
+                    className="profile-edit-name-button"
+                    onClick={photoSaveHandler}
+                  >
+                    <img src={tick} />
+                  </button>
+                )}
+                <button
+                  className="profile-edit-name-button"
+                  onClick={photoEditHandler}
+                >
+                  <img src={close} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="profile-info">
-        <div className="profile-name">{displayName}</div>
-        <button className="profile-edit-name" onClick={nameEditHandler}><img src={edit}/></button>
+        <div className="profile-edit-name">
+          {isEditing ? (
+            <input type="text" value={enteredName} onChange={nameHandler} />
+          ) : (
+            <div className="profile-name">{displayName}</div>
+          )}
+          {isEditing ? (
+            <div className="profile-edit-name-buttons-div">
+              <button
+                className="profile-edit-name-button"
+                onClick={nameSaveHandler}
+              >
+                <img src={tick} />
+              </button>
+              <button
+                className="profile-edit-name-button"
+                onClick={nameEditHandler}
+              >
+                <img src={close} />
+              </button>
+            </div>
+          ) : (
+            <button
+              className="profile-edit-name-button"
+              onClick={nameEditHandler}
+            >
+              <img src={edit} />
+            </button>
+          )}
+        </div>
+        {isEditing && !isEnteredNameValid && (
+          <p div className="profile-name-error">
+            Name has to be shorter than 20 characters and atleast 1 character.
+          </p>
+        )}
         <div className="profile-email">{email}</div>
       </div>
     </div>

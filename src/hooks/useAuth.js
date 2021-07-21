@@ -41,6 +41,7 @@ const fetchProfileInfo = (token) => {
       console.log(data);
       localStorage.setItem("email", data.users[0].email);
       if(!data.users[0].displayName){
+        console.log(data.users[0]);
         localStorage.setItem("displayName", data.users[0].email.substring(0, data.users[0].email.indexOf("@")));
       }
       else{

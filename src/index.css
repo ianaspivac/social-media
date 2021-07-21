@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap");
 
 :root {
+  --theme-primary-color:  #9b9ece;
   --theme-secondary-color: #585d99;
   --color-background: lightgray;
 }
