@@ -39,6 +39,7 @@ const ProfileInfo = () => {
   };
   const photoPreviewHandler = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     setIsPhotoAdded(true);
     var storage = firebase.storage();
     var storageRef = storage.ref();

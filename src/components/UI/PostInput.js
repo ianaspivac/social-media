@@ -1,7 +1,9 @@
-import "./DragAndDrop.css";
+import { useRef } from "react";
+import "./PostInput.css";
 
-const DragAndDrop = (props) => {
+const PostInput = (props) => {
   const { data, dispatch } = props;
+  const textInputRef = useRef();
   const handleDragEnter = (event) => {
     event.preventDefault();
     dispatch({ type: "SET_DROP_DEPTH", dropDepth: data.dropDepth + 1 });
@@ -10,7 +12,6 @@ const DragAndDrop = (props) => {
   const handleDragLeave = (event) => {
     event.preventDefault();
     dispatch({ type: "SET_DROP_DEPTH", dropDepth: data.dropDepth - 1 });
-    if (data.dropDepth > 0) return;
     dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: false });
   };
   const handleDragOver = (event) => {
@@ -26,17 +27,21 @@ const DragAndDrop = (props) => {
     if (!files[0].type.match(imageType)) {
       return;
     }
-    let fileSrc = URL.createObjectURL(files[0]);
     if (files && files.length > 0) {
       const existingFiles = data.fileList.map((f) => f.name);
       files = files.filter((f) => !existingFiles.includes(f.name));
-      dispatch({ type: "ADD_FILE_TO_LIST", filesData:{files,fileSrc} });
+      dispatch({ type: "ADD_FILE_TO_LIST", files });
       dispatch({ type: "SET_DROP_DEPTH", dropDepth: 0 });
       dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: false });
     }
   };
+  const getTextHandler = (event) => {
+    const text = textInputRef.current.value;
+    dispatch({ type: "ADD_TEXT", text });
+  };
   return (
-    <div
+    <textarea
+    rows="4" cols="50"
       className={
         data.inDropZone ? "drag-drop-zone inside-drag-area" : "drag-drop-zone"
       }
@@ -44,9 +49,9 @@ const DragAndDrop = (props) => {
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
-    >
-      <p>Drag files here to upload</p>
-    </div>
+      ref={textInputRef}
+      onChange={getTextHandler}
+    ></textarea>
   );
 };
-export default DragAndDrop;
+export default PostInput;
