@@ -65,9 +65,9 @@ const ProfileInfo = () => {
   };
   const fetchEditedData = (bodyFetch) => {
     fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI",
+      `https://react-http-560ff-default-rtdb.firebaseio.com/users/${userId}.json?auth=${token}`,
       {
-        method: "POST",
+        method: "PATCH",
         body: JSON.stringify(bodyFetch),
         headers: { "Content-Type": "application/json" },
       }
@@ -95,9 +95,7 @@ const ProfileInfo = () => {
     localStorage.removeItem("displayName");
     localStorage.setItem("displayName", enteredName);
     fetchEditedData({
-      idToken: token,
-      displayName: enteredName,
-      returnSecureToken: true,
+      displayName: enteredName
     });
     nameEditHandler();
     setDisplayName(enteredName);
@@ -107,9 +105,7 @@ const ProfileInfo = () => {
     localStorage.removeItem("photoURL");
     localStorage.setItem("photoUrl", photoUrl);
     fetchEditedData({
-      idToken: token,
-      photoUrl,
-      returnSecureToken: true,
+      photoUrl
     });
   };
 

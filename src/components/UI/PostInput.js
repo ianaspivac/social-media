@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./PostInput.css";
 
 const PostInput = (props) => {
   const { data, dispatch } = props;
   const textInputRef = useRef();
+  const [enteredText, setEnteredText] = useState("");
   const handleDragEnter = (event) => {
     event.preventDefault();
     dispatch({ type: "SET_DROP_DEPTH", dropDepth: data.dropDepth + 1 });
@@ -22,26 +23,35 @@ const PostInput = (props) => {
   const handleDrop = (event) => {
     event.preventDefault();
 
-    let files = [...event.dataTransfer.files];
+    let file = [...event.dataTransfer.files];
     var imageType = /image.*/;
-    if (!files[0].type.match(imageType)) {
+    if (!file[0].type.match(imageType)) {
       return;
     }
-    if (files && files.length > 0) {
-      const existingFiles = data.fileList.map((f) => f.name);
-      files = files.filter((f) => !existingFiles.includes(f.name));
-      dispatch({ type: "ADD_FILE_TO_LIST", files });
+    if (file && file.length > 0) {
+      console.log(URL.createObjectURL(file[0]));
+      let fileUpload = file[0];
+      //const existingFiles = data.fileList.map((f) => f.name);
+      //files = files.filter((f) => !existingFiles.includes(f.name));
+      dispatch({ type: "ADD_FILE", fileUpload });
       dispatch({ type: "SET_DROP_DEPTH", dropDepth: 0 });
       dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: false });
     }
   };
+  useEffect(() => {
+    if (props.sent) {
+      setEnteredText("");
+    }
+  }, [props.sent]);
   const getTextHandler = (event) => {
+    setEnteredText(event.target.value);
     const text = textInputRef.current.value;
     dispatch({ type: "ADD_TEXT", text });
   };
   return (
     <textarea
-    rows="4" cols="50"
+      rows="4"
+      cols="50"
       className={
         data.inDropZone ? "drag-drop-zone inside-drag-area" : "drag-drop-zone"
       }
@@ -51,6 +61,8 @@ const PostInput = (props) => {
       onDragLeave={handleDragLeave}
       ref={textInputRef}
       onChange={getTextHandler}
+      value={enteredText}
+      placeholder="Add text,image or gif ..."
     ></textarea>
   );
 };

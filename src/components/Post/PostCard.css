@@ -1,0 +1,35 @@
+.post-card {
+  border: 1px solid var(--theme-secondary-color);
+  border-radius: 1%;
+  width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0px 7px 17px -6px rgba(176, 167, 176, 1);
+  display: flex;
+  flex-direction: column;
+}
+.post-card__likes {
+  width: 20px;
+  align-self:flex-end;
+}
+.post-card__heading {
+  display: flex;
+  align-items: center;
+  color: var(--theme-secondary-color);
+  font-weight: 800;
+  font-size:1.1em;
+}
+.post-card__text{
+  margin: 20px 0;
+  font-size:0.8em;
+}
+.post-card__image{
+  margin:auto;
+  max-width:100%;
+  margin-bottom:20px;
+}
+.post-card__image img{
+  max-height: 450px;
+  width:100%;
+  object-fit: cover;
+}

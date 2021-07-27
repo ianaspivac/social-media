@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import avatar from '../assets/images/user.png';
+import avatar from "../assets/images/user.png";
 
 const calculateRemainingTime = (expirationTime) => {
   const currentTime = new Date().getTime();
@@ -19,44 +19,57 @@ const retrieveStoredToken = () => {
   }
   return remainingTime;
 };
-const fetchProfileInfo = (token) => {
+const fetchProfileInfo = (token, uid, email,url) => {
+  if(url ==="https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI"){
+    localStorage.setItem(
+      "displayName",
+      email.substring(0, email.indexOf("@"))
+    );
+    localStorage.setItem("photoUrl", avatar);
   fetch(
-    `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        idToken: token,
-      }),
-      headers: { "Content-Type": "application/json" },
-    }
-  )
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        res.json().then((data) => {});
+      `https://react-http-560ff-default-rtdb.firebaseio.com/users/${uid}.json?auth=${token}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ displayName: email.substring(0, email.indexOf("@")), photoUrl: "" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    })
-    .then((data) => {
-      console.log(data);
-      localStorage.setItem("email", data.users[0].email);
-      if(!data.users[0].displayName){
-        console.log(data.users[0]);
-        localStorage.setItem("displayName", data.users[0].email.substring(0, data.users[0].email.indexOf("@")));
-      }
-      else{
-        localStorage.setItem("displayName", data.users[0].displayName); 
-      }
-      if(!data.users[0].photoUrl){
-        localStorage.setItem("photoUrl", avatar);
-      }
-      else{
-        localStorage.setItem("photoUrl", data.users[0].photoUrl);
-      }
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          console.log(res);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }else{
+    fetch(
+      `https://react-http-560ff-default-rtdb.firebaseio.com/users/${uid}.json?auth=${token}`
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          console.log(res);
+          res.json().then((data) => {});
+        }
+      })
+      .then((data) => {
+          localStorage.setItem("displayName", data.displayName);
+        if (data.photoUrl === "") {
+          localStorage.setItem("photoUrl", avatar);
+        } else {
+          localStorage.setItem("photoUrl", data.photoUrl);
+        }
+      })
+      .catch((err) => {       
+        console.log(err.message);
+      });
+  }  
 };
 const useAuth = () => {
   const history = useHistory();
@@ -96,20 +109,21 @@ const useAuth = () => {
         }
       })
       .then((data) => {
-        fetchProfileInfo(data.idToken);
+        fetchProfileInfo(data.idToken, data.localId, data.email,url);
         dispatch({
           type: "LOGIN",
           payload: {
             token: data.idToken,
             userId: data.localId,
-            email: localStorage.getItem("email"),
+            email: data.email,
             photoUrl: localStorage.getItem("photoUrl"),
             displayName: localStorage.getItem("displayName"),
           },
         });
         localStorage.setItem("token", data.idToken);
         localStorage.setItem("userId", data.localId);
-        
+        localStorage.setItem("email", data.email);
+
         const expirationTime = new Date(
           new Date().getTime() + +data.expiresIn * 1000
         );

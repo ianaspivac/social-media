@@ -1,7 +1,7 @@
 .post-form__container {
   border:1px solid var(--theme-secondary-color);
   border-radius: 1%;
-  width: 600px;
+  width: 500px;
   margin: 20px auto;
   padding: 20px;
   box-shadow: 0px 7px 17px -6px rgba(176,167,176,1);
@@ -43,18 +43,35 @@
   text-shadow: 0 0 1px white;
   background-color: #9598c4;
 }
-.post-form__dropped-files {
+.post-form__dropped-file {
   padding: 0;
   margin: 0;
   display: flex;
   flex-wrap: wrap;
   background-color: white;
+  width: 200px;
+  position: relative;
 }
-.post-form__dropped-files li {
-  padding: 10px;
-}
-.post-form__dropped-files li img {
-  width: 100px;
-  height: 100px;
+
+.post-form__dropped-file img {
+  margin-top:10px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
+}
+.post-form__dropped-file__undo{
+  position: absolute;
+  cursor: pointer;
+  background:rgba(0, 0, 0, 0.37);
+  color:white;
+  font-size:17px;
+  padding-right:5px;
+  border:none;
+  width: 100%;
+  right:0;
+  text-align:right;
+  top:10px;
+}
+.post-form__dropped-file__undo:hover{
+  text-shadow: 0 0 1px #ffffff;
 }
