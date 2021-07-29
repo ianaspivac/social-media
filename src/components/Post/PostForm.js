@@ -31,7 +31,7 @@ const PostForm = () => {
   const [displayName, setDisplayName] = useState(
     useSelector((state) => state.userInfo.displayName)
   );
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [sent, setSent] = useState(false);
   const [nrChars, setNrChars] = useState(0);
   const [data, dispatch] = useReducer(reducer, {
@@ -98,7 +98,6 @@ const PostForm = () => {
     );
   };
   useEffect(() => {}, []);
-  //TODO:image bigger on click and option to delete
   return (
     <div className="post-form__container">
       <div className="post-form__heading">

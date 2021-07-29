@@ -1,14 +1,17 @@
 .profile {
   margin: 20px auto;
-  padding: 50px;
+  padding: 20px;
   background-color: var(--theme-secondary-color);
-  width: 600px;
-  height: 270px;
+  width: 550px;
+  height: 280px;
   display: flex;
   border-radius: 5px;
   color: white;
   box-shadow: 0px 7px 17px -6px rgba(176, 167, 176, 1);
-  --profile-image-size: 200px;
+  --profile-image-size: 170px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+box-sizing: border-box;   
 }
 .profile-edit-name-button {
   background-color: transparent;
@@ -46,6 +49,7 @@
 .profile-edit-name {
   display: flex;
   margin-bottom: 10px;
+  align-items: center;
 }
 .profile-edit-name input,
 .profile-name {

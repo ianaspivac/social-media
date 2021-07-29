@@ -1,27 +1,31 @@
 import "./ProfileInfo.css";
-import { useSelector, useDispatch } from "react-redux";
 import edit from "../../assets/images/edit.svg";
 import tick from "../../assets/images/tick.svg";
 import close from "../../assets/images/close.svg";
 import { useState, useRef, useEffect } from "react";
 import firebase from "../../Firebase/Firebase";
-const ProfileInfo = () => {
-  const dispatch = useDispatch();
+import { useLocation } from "react-router-dom";
 
+const ProfileInfo = (props) => {
+  const location = useLocation();
   const uploadedFileInput = useRef();
 
-  const [displayName, setDisplayName] = useState(
-    useSelector((state) => state.userInfo.displayName)
-  );
+  const [photoUrl, setPhotoUrl] = useState(props.photoUrl);
+  const [displayName, setDisplayName] = useState(props.displayName);
+  const [email, setEmail] = useState(props.email);
   const [enteredName, setEnteredName] = useState(displayName);
+const [loading,setLoading]=useState(false);
   const [isPhotoEdit, setIsPhotoEdit] = useState(false);
   const [isPhotoAdded, setIsPhotoAdded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isEnteredNameValid, setIsEnteredNameValid] = useState(true);
-  const [photoUrl, setPhotoUrl] = useState(
-    useSelector((state) => state.userInfo.photoUrl)
-  );
-  const email = useSelector((state) => state.userInfo.email);
+
+  useEffect(() => {
+      setDisplayName(props.displayName);
+      setEmail(props.email);
+      setPhotoUrl(props.photoUrl);
+  }, [props.displayName,props.email,props.photoUrl]);
+
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
@@ -38,6 +42,7 @@ const ProfileInfo = () => {
     setIsPhotoEdit((isPhotoEdit) => !isPhotoEdit);
   };
   const photoPreviewHandler = (event) => {
+    setLoading(true);
     const file = event.target.files[0];
     console.log(file);
     setIsPhotoAdded(true);
@@ -56,6 +61,7 @@ const ProfileInfo = () => {
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
           setPhotoUrl(url);
+          setLoading(false);
         });
       }
     );
@@ -95,7 +101,7 @@ const ProfileInfo = () => {
     localStorage.removeItem("displayName");
     localStorage.setItem("displayName", enteredName);
     fetchEditedData({
-      displayName: enteredName
+      displayName: enteredName,
     });
     nameEditHandler();
     setDisplayName(enteredName);
@@ -105,7 +111,7 @@ const ProfileInfo = () => {
     localStorage.removeItem("photoURL");
     localStorage.setItem("photoUrl", photoUrl);
     fetchEditedData({
-      photoUrl
+      photoUrl,
     });
   };
 
@@ -113,74 +119,80 @@ const ProfileInfo = () => {
     <div className="profile">
       <div className="profile-image-side">
         <div className="profile-image">
-          <img src={photoUrl} alt="avatar" />
-          <div className="profile-image-photo-edit">
-            {isPhotoEdit ? (
-              <input
-                type="file"
-                name="avatar"
-                accept="image/png, image/jpeg, image/jpg"
-                ref={uploadedFileInput}
-                onChange={photoPreviewHandler}
-              />
-            ) : (
-              <button
-                className="profile-chnage-photo-button"
-                onClick={photoEditHandler}
-              >
-                Change photo
-              </button>
-            )}
-            {isPhotoEdit && (
-              <div className="profile-edit-photo-buttons-div">
-                {isPhotoAdded && (
-                  <button
-                    className="profile-edit-name-button"
-                    onClick={photoSaveHandler}
-                  >
-                    <img src={tick} />
-                  </button>
-                )}
+          {!loading ? <img src={photoUrl} alt="avatar" /> : <p>Loading...</p>}
+          {location.pathname === "/profile" && (
+            <div className="profile-image-photo-edit">
+              {isPhotoEdit ? (
+                <input
+                  type="file"
+                  name="avatar"
+                  accept="image/png, image/jpeg, image/jpg"
+                  ref={uploadedFileInput}
+                  onChange={photoPreviewHandler}
+                />
+              ) : (
                 <button
-                  className="profile-edit-name-button"
+                  className="profile-chnage-photo-button"
                   onClick={photoEditHandler}
                 >
-                  <img src={close} />
+                  Change photo
                 </button>
-              </div>
-            )}
-          </div>
+              )}
+              {isPhotoEdit && (
+                <div className="profile-edit-photo-buttons-div">
+                  {isPhotoAdded && (
+                    <button
+                      className="profile-edit-name-button"
+                      onClick={photoSaveHandler}
+                    >
+                      <img src={tick} />
+                    </button>
+                  )}
+                  <button
+                    className="profile-edit-name-button"
+                    onClick={photoEditHandler}
+                  >
+                    <img src={close} />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <div className="profile-info">
         <div className="profile-edit-name">
-          {isEditing ? (
+          {isEditing && location.pathname === "/profile" ? (
             <input type="text" value={enteredName} onChange={nameHandler} />
           ) : (
             <div className="profile-name">{displayName}</div>
           )}
-          {isEditing ? (
-            <div className="profile-edit-name-buttons-div">
-              <button
-                className="profile-edit-name-button"
-                onClick={nameSaveHandler}
-              >
-                <img src={tick} />
-              </button>
-              <button
-                className="profile-edit-name-button"
-                onClick={nameEditHandler}
-              >
-                <img src={close} />
-              </button>
+          {location.pathname === "/profile" && (
+            <div>
+              {isEditing ? (
+                <div className="profile-edit-name-buttons-div">
+                  <button
+                    className="profile-edit-name-button"
+                    onClick={nameSaveHandler}
+                  >
+                    <img src={tick} />
+                  </button>
+                  <button
+                    className="profile-edit-name-button"
+                    onClick={nameEditHandler}
+                  >
+                    <img src={close} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="profile-edit-name-button"
+                  onClick={nameEditHandler}
+                >
+                  <img src={edit} />
+                </button>
+              )}
             </div>
-          ) : (
-            <button
-              className="profile-edit-name-button"
-              onClick={nameEditHandler}
-            >
-              <img src={edit} />
-            </button>
           )}
         </div>
         {isEditing && !isEnteredNameValid && (

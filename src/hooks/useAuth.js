@@ -30,7 +30,7 @@ const fetchProfileInfo = (token, uid, email,url) => {
       `https://react-http-560ff-default-rtdb.firebaseio.com/users/${uid}.json?auth=${token}`,
       {
         method: "PUT",
-        body: JSON.stringify({ displayName: email.substring(0, email.indexOf("@")), photoUrl: "" }),
+        body: JSON.stringify({ email:email,displayName: email.substring(0, email.indexOf("@")), photoUrl: "" }),
         headers: {
           "Content-Type": "application/json",
         },

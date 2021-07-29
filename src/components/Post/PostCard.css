@@ -12,12 +12,17 @@
   width: 20px;
   align-self:flex-end;
 }
-.post-card__heading {
+.post-card__heading,.post-card__heading a {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   color: var(--theme-secondary-color);
   font-weight: 800;
   font-size:1.1em;
+}
+.post-card__heading a:hover {
+ cursor:pointer;
+ color: var(--theme-primary-color);
 }
 .post-card__text{
   margin: 20px 0;
@@ -32,4 +37,13 @@
   max-height: 450px;
   width:100%;
   object-fit: cover;
+}
+.post-card__heading__delete{
+  background:transparent;
+  border:none;
+  font-size:20px;
+  cursor: pointer;
+}
+.post-card__heading__delete:hover{
+  color:rgb(223, 100, 100);
 }

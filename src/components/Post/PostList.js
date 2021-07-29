@@ -3,8 +3,10 @@ import PostCard from "./PostCard";
 import { useEffect, useState, useCallback } from "react";
 const PostList = () => {
   const [posts, setPosts] = useState([]);
+  const [loading,setLoading]=useState(false);
   const token = localStorage.getItem("token");
   const fetchPostsHandler = useCallback(async () => {
+    setLoading(true);
     let usersInfo = [];
     fetch(
       `https://react-http-560ff-default-rtdb.firebaseio.com/users.json?auth=${token}`
@@ -17,6 +19,7 @@ const PostList = () => {
             displayName: data[user].displayName,
           });
         }
+        setLoading(false);
       });
     try {
       const response = await fetch(
@@ -43,8 +46,8 @@ const PostList = () => {
           });
         }
       }
-      console.log(loadedPosts);
       setPosts(loadedPosts);
+     
     } catch (error) {
       console.log(error.message);
     }
@@ -65,6 +68,6 @@ const PostList = () => {
       likes={post.likes}
     />
   ));
-  return <div>{postList}</div>;
+  return <div>{!loading ? <div>{postList}</div> :<p>Loading...</p>}</div>;
 };
 export default PostList;
