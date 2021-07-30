@@ -19,59 +19,9 @@ const retrieveStoredToken = () => {
   }
   return remainingTime;
 };
-const fetchProfileInfo = (token, uid, email,url) => {
-  if(url ==="https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI"){
-    localStorage.setItem(
-      "displayName",
-      email.substring(0, email.indexOf("@"))
-    );
-    localStorage.setItem("photoUrl", avatar);
-  fetch(
-      `https://react-http-560ff-default-rtdb.firebaseio.com/users/${uid}.json?auth=${token}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ email:email,displayName: email.substring(0, email.indexOf("@")), photoUrl: "" }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          console.log(res);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }else{
-    fetch(
-      `https://react-http-560ff-default-rtdb.firebaseio.com/users/${uid}.json?auth=${token}`
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          console.log(res);
-          res.json().then((data) => {});
-        }
-      })
-      .then((data) => {
-          localStorage.setItem("displayName", data.displayName);
-        if (data.photoUrl === "") {
-          localStorage.setItem("photoUrl", avatar);
-        } else {
-          localStorage.setItem("photoUrl", data.photoUrl);
-        }
-      })
-      .catch((err) => {       
-        console.log(err.message);
-      });
-  }  
-};
+
 const useAuth = () => {
+  const info = useSelector((state) => state.userInfo);
   const history = useHistory();
   const dispatch = useDispatch();
   const duration = retrieveStoredToken();
@@ -109,15 +59,13 @@ const useAuth = () => {
         }
       })
       .then((data) => {
-        fetchProfileInfo(data.idToken, data.localId, data.email,url);
+        fetchProfileInfo(data.idToken, data.localId, data.email, url);
         dispatch({
           type: "LOGIN",
           payload: {
             token: data.idToken,
             userId: data.localId,
             email: data.email,
-            photoUrl: localStorage.getItem("photoUrl"),
-            displayName: localStorage.getItem("displayName"),
           },
         });
         localStorage.setItem("token", data.idToken);
@@ -131,14 +79,85 @@ const useAuth = () => {
         const remainingTime = calculateRemainingTime(expirationTime);
 
         setLogoutTimer(setTimeout(logout, remainingTime));
-
         history.replace("/feed");
       })
       .catch((err) => {
         console.log(err.message);
       });
   };
+  const fetchProfileInfo = (token, uid, email, url) => {
+    if (
+      url ===
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI"
+    ) {
+      localStorage.setItem(
+        "displayName",
+        email.substring(0, email.indexOf("@"))
+      );
+      localStorage.setItem("photoUrl", avatar);
+      dispatch({
+        type: "SET_USER_INFO",
+        payload: {
+          displayName: email.substring(0, email.indexOf("@")),
+          photoUrl: avatar,
+        },
+      });
+      fetch(
+        `https://react-http-560ff-default-rtdb.firebaseio.com/users/${uid}.json?auth=${token}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            email: email,
+            displayName: email.substring(0, email.indexOf("@")),
+            photoUrl: "",
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            console.log(res);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      fetch(
+        `https://react-http-560ff-default-rtdb.firebaseio.com/users/${uid}.json?auth=${token}`
+      )
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            console.log(res);
+            res.json().then((data) => {});
+          }
+        })
+        .then((data) => {
+          let photo = "";
 
+          if (data.photoUrl === "") {
+            photo = avatar;
+          } else {
+            photo = data.photoUrl;
+          }
+          localStorage.setItem("displayName", data.displayName);
+          localStorage.setItem("photoUrl", photo);
+          dispatch({
+            type: "SET_USER_INFO",
+            payload: { displayName: data.displayName, photoUrl: photo },
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
   const logout = useCallback(() => {
     localStorage.clear();
     dispatch({ type: "LOGOUT" });

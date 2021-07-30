@@ -3,7 +3,7 @@ import PostCard from "./PostCard";
 import { useEffect, useState, useCallback } from "react";
 const PostList = () => {
   const [posts, setPosts] = useState([]);
-  const [loading,setLoading]=useState(false);
+  const [loading,setLoading]=useState(true);
   const token = localStorage.getItem("token");
   const fetchPostsHandler = useCallback(async () => {
     setLoading(true);
@@ -19,7 +19,6 @@ const PostList = () => {
             displayName: data[user].displayName,
           });
         }
-        setLoading(false);
       });
     try {
       const response = await fetch(
@@ -47,12 +46,12 @@ const PostList = () => {
         }
       }
       setPosts(loadedPosts);
-     
+      setLoading(false);
     } catch (error) {
       console.log(error.message);
     }
   }, []);
-
+//displayname appears later
   useEffect(() => {
     fetchPostsHandler();
   }, [fetchPostsHandler]);

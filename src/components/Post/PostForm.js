@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import firebase from "../../Firebase/Firebase";
 import "./PostForm.css";
 import PostInput from "../UI/PostInput";
+import { useHistory } from "react-router-dom";
 const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_TEXT":
@@ -23,14 +24,11 @@ const reducer = (state, action) => {
   }
 };
 const PostForm = () => {
+  const history = useHistory();
   const idToken = useSelector((state) => state.userInfo.token);
   const userId = useSelector((state) => state.userInfo.userId);
-  const [photoUrl, setPhotoUrl] = useState(
-    useSelector((state) => state.userInfo.photoUrl)
-  );
-  const [displayName, setDisplayName] = useState(
-    useSelector((state) => state.userInfo.displayName)
-  );
+  const photoUrl = useSelector((state) => state.userInfo.photoUrl);
+  const displayName = useSelector((state) => state.userInfo.displayName);
   const [loading, setLoading] = useState(true);
   const [sent, setSent] = useState(false);
   const [nrChars, setNrChars] = useState(0);
@@ -42,9 +40,16 @@ const PostForm = () => {
   });
   const { file } = data;
   const { text } = data;
-  const deleteImageHandler=()=>{
+  const deleteImageHandler = () => {
     dispatch({ type: "DELETE_FILE" });
   };
+  useEffect(() => {
+    if (photoUrl === undefined || displayName === undefined) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [photoUrl,displayName]);
   const postHandler = (event) => {
     setNrChars(0);
     event.preventDefault();
@@ -97,21 +102,30 @@ const PostForm = () => {
       }
     );
   };
-  useEffect(() => {}, []);
+
   return (
     <div className="post-form__container">
-      <div className="post-form__heading">
-        <div className="post-form__avatar">
-          <img src={photoUrl} alt="profile pic" />
+      {!loading ? (
+        <div className="post-form__heading">
+          <div className="post-form__avatar">
+            <img src={photoUrl} alt="profile pic" />
+          </div>
+          <div className="post-form__name">{displayName}</div>
         </div>
-        <div className="post-form__name">{displayName}</div>
-      </div>
+      ) : (
+        <p>Loading...</p>
+      )}
       <form className="post-form__form" onSubmit={postHandler}>
         <PostInput data={data} dispatch={dispatch} sent={sent} />
-        {file.name  && (
+        {file.name && (
           <div className="post-form__dropped-file">
-            <button className="post-form__dropped-file__undo" onClick={deleteImageHandler} >x</button>
-              <img src={URL.createObjectURL(file)} alt={file.name} />
+            <button
+              className="post-form__dropped-file__undo"
+              onClick={deleteImageHandler}
+            >
+              x
+            </button>
+            <img src={URL.createObjectURL(file)} alt={file.name} />
           </div>
         )}
         {nrChars > 300 && (

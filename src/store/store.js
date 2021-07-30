@@ -22,11 +22,17 @@ const authReducer = (state = initialState, action) => {
         userInfo: {
           token: action.payload.token,
           userId: action.payload.userId,
-          email: action.payload.email,
-          photoUrl: action.payload.photoUrl,
-          displayName: action.payload.displayName,
+          email: action.payload.email
         },
         isLoggedIn: true,
+      };
+      case "SET_USER_INFO":
+      return {
+        ...state,
+        userInfo: {
+          photoUrl: action.payload.photoUrl,
+          displayName: action.payload.displayName,
+        }
       };
     case "LOGOUT":
       return {

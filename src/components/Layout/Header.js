@@ -1,43 +1,53 @@
 import { Link, useHistory } from "react-router-dom";
 import "./Header.css";
 import { useSelector } from "react-redux";
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 const Header = () => {
   const history = useHistory();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
-  const [photoUrl,setPhotoUrl] = useState(useSelector((state) => state.userInfo.photoUrl));
-  const [displayName,setDisplayName] = useState(useSelector((state) => state.userInfo.displayName));
-  const {logout} = useAuth();
+  const photoUrl = useSelector((state) => state.userInfo.photoUrl);
+  const displayName = useSelector((state) => state.userInfo.displayName);
+  const [loading, setLoading] = useState(true);
+  const { logout } = useAuth();
   const logoutHandler = () => {
     logout();
     history.replace("/");
   };
- useEffect(()=>{
-   if(photoUrl !== localStorage.getItem("photoUrl")){
-    console.log(photoUrl);
-     console.log("a");
-     setPhotoUrl(localStorage.getItem("photoUrl"));
-     console.log(photoUrl);
-   }
- },[setPhotoUrl]);
+  useEffect(() => {
+    if (displayName === undefined || photoUrl === undefined) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [displayName, photoUrl]);
   return (
     <header>
       <nav className="header-nav">
-        <ul className="header-nav-list">      
-           {isLoggedIn && (
-          <li className="header-nav-feed ">
-            <Link to="/feed" >Feed</Link>
-          </li>
-           )}
-             {isLoggedIn && (
-            <li>
-              <Link to="/profile" className="header-nav-profile"><div className="header-div-avatar"><img src={photoUrl} /></div>{displayName}</Link>
+        <ul className="header-nav-list">
+          {isLoggedIn && (
+            <li className="header-nav-feed ">
+              <Link to="/feed">Feed</Link>
             </li>
           )}
+          {isLoggedIn &&
+            (!loading ? (
+              <li>
+                <Link to="/profile" className="header-nav-profile">
+                  <div className="header-div-avatar">
+                    <img src={photoUrl} />
+                  </div>
+                  {displayName}
+                </Link>
+              </li>
+            ) : (
+              <p>Loading...</p>
+            ))}
           {isLoggedIn && (
             <li>
-              <button onClick={logoutHandler} className="header-nav-button">Logout</button>
+              <button onClick={logoutHandler} className="header-nav-button">
+                Logout
+              </button>
             </li>
           )}
           {!isLoggedIn && (
