@@ -9,41 +9,54 @@
   flex-direction: column;
 }
 .post-card__likes {
-  width: 20px;
-  align-self:flex-end;
+  width: 30px;
+  display: flex;
 }
-.post-card__heading,.post-card__heading a {
+.post-card__likes button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+.post-card__likes button img{
+  width: 20px;
+  filter: brightness(0%);
+}
+.liked{
+  filter: brightness(100%) !important;
+}
+.post-card__heading,
+.post-card__heading a {
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: var(--theme-secondary-color);
   font-weight: 800;
-  font-size:1.1em;
+  font-size: 1.1em;
 }
 .post-card__heading a:hover {
- cursor:pointer;
- color: var(--theme-primary-color);
+  cursor: pointer;
+  color: var(--theme-primary-color);
 }
-.post-card__text{
+.post-card__text {
   margin: 20px 0;
-  font-size:0.8em;
+  font-size: 0.8em;
 }
-.post-card__image{
-  margin:auto;
-  max-width:100%;
-  margin-bottom:20px;
+.post-card__image {
+  margin: auto;
+  max-width: 100%;
+  margin-bottom: 20px;
 }
-.post-card__image img{
+.post-card__image img {
   max-height: 450px;
-  width:100%;
+  width: 100%;
   object-fit: cover;
 }
-.post-card__heading__delete{
-  background:transparent;
-  border:none;
-  font-size:20px;
+.post-card__heading__delete {
+  background: transparent;
+  border: none;
+  font-size: 20px;
   cursor: pointer;
 }
-.post-card__heading__delete:hover{
-  color:rgb(223, 100, 100);
+.post-card__heading__delete:hover {
+  color: rgb(223, 100, 100);
 }

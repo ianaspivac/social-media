@@ -15,7 +15,7 @@ const Profile = () => {
   const [email, setEmail] = useState(
     useSelector((state) => state.userInfo.email)
   );
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const token = localStorage.getItem("token");
   const currentUserId = location.pathname.slice(6, location.pathname.length);

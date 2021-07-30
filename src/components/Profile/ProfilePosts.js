@@ -2,57 +2,56 @@ import "./ProfilePosts.css";
 import PostCard from "../Post/PostCard";
 import { useLocation } from "react-router";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 const ProfilePosts = (props) => {
   const location = useLocation();
   const userId = localStorage.getItem("userId");
-  const displayName = localStorage.getItem("displayName");
+  const displayName = useSelector((state) => state.userInfo.displayName);
   const [posts, setPosts] = useState([]);
-  const [loading,setLoading]=useState(false);
-  useEffect(() => {
-    let postList=[];
+  const [loading, setLoading] = useState(true);
+  let likesList = [];
+  let likeInfo = [];
+  useEffect(() => { 
     setLoading(true);
+    fetch(`https://react-http-560ff-default-rtdb.firebaseio.com/liked.json`)
+      .then((response) => response.json())
+      .then((data) => {
+        likeInfo = data;
+      });
     if (location.pathname === "/profile") {
-      fetch(
-        `https://react-http-560ff-default-rtdb.firebaseio.com/posts/${userId}.json`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          for (const post in data) {
-            postList.push({
-              id: post,
-              text: data[post].text,
-              imageURL: data[post].imageURL,
-              userId,
-             displayName,
-              likes: data[post].likes,
-            });
-          }
-          setPosts(postList);
-          setLoading(false);
-        });
+      fetchPosts(userId);    
     } else {
       const currentUserId = props.currentUserId;
-      fetch(
-        `https://react-http-560ff-default-rtdb.firebaseio.com/posts/${currentUserId}.json`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          for (const post in data) {
-            postList.push({
-              id: post,
-              text: data[post].text,
-              imageURL: data[post].imageURL,
-              userId: currentUserId,
-              displayName: props.displayName,
-              likes: data[post].likes,
-            });
-          }
-          setPosts(postList);
-          setLoading(false);
-        });
+      fetchPosts(currentUserId);   
     }
-
-  }, [fetch,props.displayName,displayName,userId]);
+  }, [fetch, props.displayName, displayName, userId]);
+  const fetchPosts = (uid) => {
+    let postList = [];
+    fetch(
+      `https://react-http-560ff-default-rtdb.firebaseio.com/posts/${uid}.json`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        for (const key in data) {
+          likesList=[];
+          for (const postLikeId in likeInfo) {
+            if (postLikeId === key) {
+              likesList.push(likeInfo[postLikeId]);
+            }
+          }
+          postList.push({
+            id: key,
+            text: data[key].text,
+            imageURL: data[key].imageURL,
+            userId: uid,
+            displayName: props.displayName,
+            likes: likesList,
+          });
+        }
+        setPosts(postList);
+        setLoading(false);
+      });
+  };
   const postList = posts.map((post) => (
     <PostCard
       id={post.id}

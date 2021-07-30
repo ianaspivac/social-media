@@ -1,13 +1,17 @@
 import "./PostList.css";
 import PostCard from "./PostCard";
 import { useEffect, useState, useCallback } from "react";
+import { useSelector } from "react-redux";
 const PostList = () => {
   const [posts, setPosts] = useState([]);
-  const [loading,setLoading]=useState(true);
-  const token = localStorage.getItem("token");
+  const [loading, setLoading] = useState(true);
+  const token = useSelector(state=>state.userInfo.token);
   const fetchPostsHandler = useCallback(async () => {
     setLoading(true);
     let usersInfo = [];
+    let likeInfo = [];
+    let likesList = [];
+ 
     fetch(
       `https://react-http-560ff-default-rtdb.firebaseio.com/users.json?auth=${token}`
     )
@@ -19,6 +23,11 @@ const PostList = () => {
             displayName: data[user].displayName,
           });
         }
+      });
+    fetch(`https://react-http-560ff-default-rtdb.firebaseio.com/liked.json`)
+      .then((response) => response.json())
+      .then((data) => {
+        likeInfo = data;
       });
     try {
       const response = await fetch(
@@ -37,23 +46,32 @@ const PostList = () => {
           }
         }
         for (const key in data[uid]) {
+          likesList = [];
+          for (const postLikeId in likeInfo) {
+                   
+            if (postLikeId === key) {
+              likesList.push(likeInfo[postLikeId]);
+            }
+          }
           loadedPosts.push({
             ...data[uid][key],
             id: key,
             userId: uid,
             displayName: currentUserId.displayName,
+            likes: likesList,
           });
         }
       }
       setPosts(loadedPosts);
-      setLoading(false);
+     
     } catch (error) {
       console.log(error.message);
     }
   }, []);
-//displayname appears later
+ 
   useEffect(() => {
-    fetchPostsHandler();
+    fetchPostsHandler(); 
+    setLoading(false);
   }, [fetchPostsHandler]);
 
   const postList = posts.map((post) => (
@@ -67,6 +85,6 @@ const PostList = () => {
       likes={post.likes}
     />
   ));
-  return <div>{!loading ? <div>{postList}</div> :<p>Loading...</p>}</div>;
+  return <div>{!loading ? <div>{postList}</div> : <p>Loading...</p>}</div>;
 };
 export default PostList;
