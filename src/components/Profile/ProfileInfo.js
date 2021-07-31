@@ -5,26 +5,28 @@ import close from "../../assets/images/close.svg";
 import { useState, useRef, useEffect } from "react";
 import firebase from "../../Firebase/Firebase";
 import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const ProfileInfo = (props) => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const uploadedFileInput = useRef();
 
   const [photoUrl, setPhotoUrl] = useState(props.photoUrl);
   const [displayName, setDisplayName] = useState(props.displayName);
   const [email, setEmail] = useState(props.email);
   const [enteredName, setEnteredName] = useState(displayName);
-const [loading,setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
   const [isPhotoEdit, setIsPhotoEdit] = useState(false);
   const [isPhotoAdded, setIsPhotoAdded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isEnteredNameValid, setIsEnteredNameValid] = useState(true);
 
   useEffect(() => {
-      setDisplayName(props.displayName);
-      setEmail(props.email);
-      setPhotoUrl(props.photoUrl);
-  }, [props.displayName,props.email,props.photoUrl]);
+    setDisplayName(props.displayName);
+    setEmail(props.email);
+    setPhotoUrl(props.photoUrl);
+  }, [props.displayName, props.email, props.photoUrl]);
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -85,9 +87,10 @@ const [loading,setLoading]=useState(false);
           res.json().then((data) => {});
         }
       })
-      .then((data) => {
-        console.log(data);
-      })
+      .then((data) => {dispatch({
+        type: "SET_USER_INFO",
+        payload: { displayName: localStorage.getItem("displayName"), photoUrl:localStorage.getItem("photoUrl") },
+      });})
       .catch((err) => {
         console.log(err.message);
       });
@@ -113,6 +116,8 @@ const [loading,setLoading]=useState(false);
     fetchEditedData({
       photoUrl,
     });
+    
+    setIsPhotoEdit(false);
   };
 
   return (

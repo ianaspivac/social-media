@@ -75,3 +75,19 @@
 .post-form__dropped-file__undo:hover{
   text-shadow: 0 0 1px #ffffff;
 }
+@keyframes message {
+  0% {opacity: 0;}
+  50%{opacity: 1;}
+  100%{opacity: 0;}
+}
+.post-form__message{
+  position: absolute;
+  left:45%;
+  top:30%;
+  color:white;
+  background-color:var(--theme-secondary-color);
+  padding:10px;
+  border-radius:5px;
+  animation-name: message;
+  animation-duration: 4s;
+}

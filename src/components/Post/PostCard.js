@@ -11,7 +11,10 @@ const PostCard = (props) => {
     Object.keys(props.likes).length
   );
   const [userLikeId, setUserLikeId] = useState("");
+  const [displayPost, setDisplayPost] = useState(true);
   const deletePostHandler = () => {
+    //in order to avoid fetching multiple times on delete,better to temporary remove
+    setDisplayPost(false);
     fetch(
       `https://react-http-560ff-default-rtdb.firebaseio.com/posts/${props.userId}/${props.id}.json?auth=${token}`,
       {
@@ -61,6 +64,14 @@ const PostCard = (props) => {
       });
     }
   };
+  const confirmationHandler = () => {
+    var question = window.confirm("Your post will be deleted");
+    if (question) {
+      deletePostHandler();
+    } else {
+      return;
+    }
+  };
   useEffect(() => {
     for (const user in props.likes) {
       for (const likeId in props.likes[user]) {
@@ -73,35 +84,37 @@ const PostCard = (props) => {
     }
   }, []);
   return (
-    <div className="post-card">
-      <div className="post-card__heading">
-        <Link to={`/user/${props.userId}`}>{props.displayName}</Link>
-        <div>
-          {props.ownProfile && (
-            <button
-              className="post-card__heading__delete"
-              onClick={deletePostHandler}
-            >
-              x
-            </button>
+    displayPost && (
+      <div className="post-card">
+        <div className="post-card__heading">
+          <Link to={`/user/${props.userId}`}>{props.displayName}</Link>
+          <div>
+            {props.ownProfile && (
+              <button
+                className="post-card__heading__delete"
+                onClick={confirmationHandler}
+              >
+                x
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="post-card__content">
+          <div className="post-card__text">{props.text}</div>
+          {props.imageURL && (
+            <div className="post-card__image">
+              <img src={props.imageURL} />
+            </div>
           )}
         </div>
+        <div className="post-card__likes">
+          <button onClick={likeHandler}>
+            <img src={heart} className={isLiked ? "liked" : ""} />
+          </button>
+          {props.likes && likesQuantity}
+        </div>
       </div>
-      <div className="post-card__content">
-        <div className="post-card__text">{props.text}</div>
-        {props.imageURL && (
-          <div className="post-card__image">
-            <img src={props.imageURL} />
-          </div>
-        )}
-      </div>
-      <div className="post-card__likes">
-        <button onClick={likeHandler}>
-          <img src={heart} className={isLiked ? "liked" : ""} />
-        </button>
-        {props.likes && likesQuantity}
-      </div>
-    </div>
+    )
   );
 };
 export default PostCard;

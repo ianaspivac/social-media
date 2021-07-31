@@ -2,16 +2,16 @@ import "./PostList.css";
 import PostCard from "./PostCard";
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-const PostList = () => {
+const PostList = (props) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = useSelector(state=>state.userInfo.token);
+  const token = useSelector((state) => state.userInfo.token);
   const fetchPostsHandler = useCallback(async () => {
     setLoading(true);
     let usersInfo = [];
     let likeInfo = [];
     let likesList = [];
- 
+
     fetch(
       `https://react-http-560ff-default-rtdb.firebaseio.com/users.json?auth=${token}`
     )
@@ -48,7 +48,6 @@ const PostList = () => {
         for (const key in data[uid]) {
           likesList = [];
           for (const postLikeId in likeInfo) {
-                   
             if (postLikeId === key) {
               likesList.push(likeInfo[postLikeId]);
             }
@@ -63,16 +62,16 @@ const PostList = () => {
         }
       }
       setPosts(loadedPosts);
-     
     } catch (error) {
       console.log(error.message);
     }
   }, []);
- 
+
   useEffect(() => {
-    fetchPostsHandler(); 
+    fetchPostsHandler();
     setLoading(false);
-  }, [fetchPostsHandler]);
+  }, [fetchPostsHandler,props.toggleNewPost]);
+ 
 
   const postList = posts.map((post) => (
     <PostCard
@@ -84,7 +83,7 @@ const PostList = () => {
       displayName={post.displayName}
       likes={post.likes}
     />
-  ));
+  )).reverse();
   return <div>{!loading ? <div>{postList}</div> : <p>Loading...</p>}</div>;
 };
 export default PostList;

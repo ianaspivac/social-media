@@ -9,6 +9,7 @@ const Profile = () => {
   const [photoUrl, setPhotoUrl] = useState(
     useSelector((state) => state.userInfo.photoUrl)
   );
+  const userDisplayName=useSelector((state) => state.userInfo.displayName);
   const [displayName, setDisplayName] = useState(
     useSelector((state) => state.userInfo.displayName)
   );
@@ -48,21 +49,17 @@ const Profile = () => {
         .catch((err) => {
           console.log(err.message);
         });
-    } else {
-      setLoading(true);
-      setDisplayName(localStorage.getItem("displayName"));
-      setEmail(localStorage.getItem("email"));
-      setPhotoUrl(localStorage.getItem("photoUrl"));
-      setLoading(false);
-    }
-    
+    } 
+   else{
+     setLoading(false);
+   }
   }, [location, currentUserId, token]);
 
   return (
     <div>
       {!loading ? (
         <ProfileInfo
-          displayName={displayName}
+          displayName={location.pathname === "/profile" ? userDisplayName : displayName }
           email={email}
           photoUrl={photoUrl}
         />
@@ -73,7 +70,7 @@ const Profile = () => {
       {!loading ? (
         <div>
           {location.pathname === "/profile" ? (
-            <ProfilePosts displayName={displayName} ownProfile={true} />
+            <ProfilePosts displayName={userDisplayName} ownProfile={true} />
           ) : (
             <ProfilePosts
               currentUserId={currentUserId}

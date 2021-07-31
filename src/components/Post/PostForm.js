@@ -4,6 +4,7 @@ import firebase from "../../Firebase/Firebase";
 import "./PostForm.css";
 import PostInput from "../UI/PostInput";
 import { useHistory } from "react-router-dom";
+import ProfilePosts from "../Profile/ProfilePosts";
 const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_TEXT":
@@ -23,8 +24,8 @@ const reducer = (state, action) => {
       return state;
   }
 };
-const PostForm = () => {
-  const history = useHistory();
+const PostForm = (props) => {
+  let timer = null;
   const idToken = useSelector((state) => state.userInfo.token);
   const userId = useSelector((state) => state.userInfo.userId);
   const photoUrl = useSelector((state) => state.userInfo.photoUrl);
@@ -32,6 +33,7 @@ const PostForm = () => {
   const [loading, setLoading] = useState(true);
   const [sent, setSent] = useState(false);
   const [nrChars, setNrChars] = useState(0);
+  const [sentMessage, setSentMessage] = useState(false);
   const [data, dispatch] = useReducer(reducer, {
     text: "",
     dropDepth: 0,
@@ -49,12 +51,11 @@ const PostForm = () => {
     } else {
       setLoading(false);
     }
-  }, [photoUrl,displayName]);
+  }, [photoUrl, displayName]);
   const postHandler = (event) => {
     setNrChars(0);
     event.preventDefault();
     setSent(false);
-    let imageURL = "";
     if (text.length < 1) {
       return;
     }
@@ -63,46 +64,61 @@ const PostForm = () => {
       return;
     }
 
-    var storage = firebase.storage();
-    var storageRef = storage.ref();
-    var uploadTask = storageRef
-      .child(`postsImage/${userId}/${file.name}`)
-      .put(file);
-
-    uploadTask.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      (snapshot) => {},
-      (error) => {
-        throw error;
-      },
-      () => {
-        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
-          imageURL = url;
-          fetch(
-            `https://react-http-560ff-default-rtdb.firebaseio.com/posts/${userId}.json?auth=${idToken}`,
-            {
-              method: "POST",
-              body: JSON.stringify({ text, imageURL }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          ).then((res) => {
-            if (res.ok) {
-              setSent(true);
-              dispatch({ type: "DELETE_FILE" });
-              return res.json();
-            } else {
-              res.json().then((data) => {
-                console.log(data);
-              });
-            }
+    if (file.name) {
+      var storage = firebase.storage();
+      var storageRef = storage.ref();
+      var uploadTask = storageRef
+        .child(`postsImage/${userId}/${file.name}`)
+        .put(file);
+      console.log(file);
+      uploadTask.on(
+        firebase.storage.TaskEvent.STATE_CHANGED,
+        (snapshot) => {},
+        (error) => {
+          throw error;
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+            fetchPost(text, url);
           });
-        });
-      }
-    );
+        }
+      );
+    } else {
+      fetchPost(text, "");
+    }
   };
+  const fetchPost = (text, imageURL) => {
+    fetch(
+      `https://react-http-560ff-default-rtdb.firebaseio.com/posts/${userId}.json?auth=${idToken}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ text, imageURL }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => {
+        if (res.ok) {
+          setSent(true);
+          setSentMessage(true);
 
+          timer = setTimeout(() => {
+            setSentMessage(false);
+          }, 3000);
+          dispatch({ type: "DELETE_FILE" });
+          return res.json();
+        } else {
+          res.json().then((data) => {
+            console.log(data);
+          });
+        }
+      })
+      .then((data) => {
+        props.sendPost();
+      });
+    return () => clearTimeout(timer);
+  };
   return (
     <div className="post-form__container">
       {!loading ? (
@@ -116,6 +132,7 @@ const PostForm = () => {
         <p>Loading...</p>
       )}
       <form className="post-form__form" onSubmit={postHandler}>
+        {sentMessage && <div className="post-form__message">Posted!</div>}
         <PostInput data={data} dispatch={dispatch} sent={sent} />
         {file.name && (
           <div className="post-form__dropped-file">
