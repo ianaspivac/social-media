@@ -9,8 +9,7 @@ import Profile from "./pages/Profile";
 function App() {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const userId=localStorage.getItem("userId");
-  //TODO:add loading where it is needed
-  //TODO:fix routing if user acceses uncomplete user link or inexisting uid
+ 
   return (
     <main>
       <Header />

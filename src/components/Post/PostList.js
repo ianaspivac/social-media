@@ -28,7 +28,6 @@ const PostList = (props) => {
         .then((response) => response.json())
         .then((data) => {
           likeInfo = data;
-          console.log(likeInfo)
           return  fetch(`https://react-http-560ff-default-rtdb.firebaseio.com/posts.json`)
           .then((response) => response.json())
           .then((data) => {
