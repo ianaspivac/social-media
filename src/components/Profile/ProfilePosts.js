@@ -20,10 +20,10 @@ const ProfilePosts = (props) => {
         likeInfo = data;
       });
     if (location.pathname === "/profile") {
-      fetchPosts(userId);    
+      return fetchPosts(userId);    
     } else {
       const currentUserId = props.currentUserId;
-      fetchPosts(currentUserId);   
+      return fetchPosts(currentUserId);   
     }
   }, [fetch, props.displayName, displayName, userId]);
   const fetchPosts = (uid) => {

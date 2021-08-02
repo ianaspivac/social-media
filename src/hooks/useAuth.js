@@ -59,7 +59,7 @@ const useAuth = () => {
         }
       })
       .then((data) => {
-        fetchProfileInfo(data.idToken, data.localId, data.email, url);
+        
         dispatch({
           type: "LOGIN",
           payload: {
@@ -79,7 +79,8 @@ const useAuth = () => {
         const remainingTime = calculateRemainingTime(expirationTime);
 
         setLogoutTimer(setTimeout(logout, remainingTime));
-        history.replace("/feed");
+        
+        return fetchProfileInfo(data.idToken, data.localId, data.email, url);
       })
       .catch((err) => {
         console.log(err.message);
@@ -152,11 +153,13 @@ const useAuth = () => {
             type: "SET_USER_INFO",
             payload: { displayName: data.displayName, photoUrl: photo },
           });
+
         })
         .catch((err) => {
           console.log(err.message);
         });
     }
+    history.replace("/feed");
   };
   const logout = useCallback(() => {
     localStorage.clear();

@@ -26,7 +26,7 @@ const ProfileInfo = (props) => {
     setDisplayName(props.displayName);
     setEmail(props.email);
     setPhotoUrl(props.photoUrl);
-  }, [props.displayName, props.email, props.photoUrl]);
+  }, [props.displayName,props.photoUrl,props.email]);
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -46,7 +46,6 @@ const ProfileInfo = (props) => {
   const photoPreviewHandler = (event) => {
     setLoading(true);
     const file = event.target.files[0];
-    console.log(file);
     setIsPhotoAdded(true);
     var storage = firebase.storage();
     var storageRef = storage.ref();

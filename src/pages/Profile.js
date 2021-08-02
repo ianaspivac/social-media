@@ -23,7 +23,6 @@ const Profile = () => {
 
   useEffect(() => {
     if (location.pathname !== "/profile") {
-      console.log(location.pathname);
       setLoading(true);
       fetch(
         `https://react-http-560ff-default-rtdb.firebaseio.com/users/${currentUserId}.json?auth=${token}`
@@ -58,10 +57,15 @@ const Profile = () => {
   return (
     <div>
       {!loading ? (
+        location.pathname === "/profile" ?  <ProfileInfo
+        displayName={userDisplayName }
+        email={localStorage.getItem("email") }
+        photoUrl={localStorage.getItem("photoUrl") }
+      /> :
         <ProfileInfo
-          displayName={location.pathname === "/profile" ? userDisplayName : displayName }
-          email={email}
-          photoUrl={photoUrl}
+          displayName={displayName }
+          email={email }
+          photoUrl={photoUrl }
         />
       ) : (
         <p>Loading</p>
