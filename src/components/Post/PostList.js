@@ -14,7 +14,7 @@ const PostList = (props) => {
     let likesList = [];
 
     fetch(
-      `https://react-http-560ff-default-rtdb.firebaseio.com/users.json?auth=${token}`
+      `https://react-http-560ff-default-rtdb.firebaseio.com/users.json?`
     )
       .then((response) => response.json())
       .then((data) => {
