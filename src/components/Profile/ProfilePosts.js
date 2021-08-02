@@ -63,7 +63,7 @@ const ProfilePosts = (props) => {
       likes={post.likes}
       ownProfile={props.ownProfile}
     />
-  ));
+  )).reverse();
   return <div>{!loading ? postList : <p>Loading...</p>}</div>;
 };
 export default ProfilePosts;

@@ -3,7 +3,6 @@ import PostList from "../components/Post/PostList";
 import { useState } from "react";
 const Feed = () => {
   const [toggleNewPost,setToggleNewPost]=useState(false);
-  let newPost = {};
   const sendPostHandler = () => {
     setToggleNewPost(toggleNewPost=>!toggleNewPost);
   };

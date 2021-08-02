@@ -9,7 +9,7 @@
 .authentification-form__inputs {
 }
 .authentification-form__actions {
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
   align-items: center;
 }
 .authentification-form,
@@ -21,7 +21,7 @@
 .authentification-form__submit {
   background-color: transparent;
   color: white;
-  border: none; 
+  border: none;
   padding: 10px 15px;
   width: 100%;
   cursor: pointer;
@@ -30,30 +30,37 @@
   border: 1px solid white;
 }
 .authentification-form__submit:hover {
-    background-color: #0000000c;
+  background-color: #0000000c;
   text-shadow: 0 0 1px #ffffff;
 }
-.authentification-form__inputs input{
-    border:1px solid white;
-    border-radius: 5px;
-    padding: 10px 15px;
-    margin-top:10px;
+.authentification-form__inputs input {
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-top: 10px;
 }
-.authentification-form__name h1{
-   text-align:center;
+
+.authentification-form__name h1 {
+  text-align: center;
+  margin:10px 0;
 }
-.authentification-form__link{
-    color:rgba(255, 255, 255, 0.377);
-    margin-top:10px;
-    font-size:0.8em;
+.authentification-form__link {
+  color: rgba(255, 255, 255, 0.377);
+  margin-top: 10px;
+  font-size: 0.8em;
 }
-.authentification-form__link:hover{
-    color:white;
+.authentification-form__link:hover {
+  color: white;
 }
-.authentification-form__invalid{
-    color:rgb(252, 98, 98);
+.authentification-form__invalid {
+  color: rgb(252, 98, 98);
 }
-.invalid{
-    background-color: rgba(255, 0, 0, 0.075);
-    border-color:rgb(252, 98, 98) !important;
+.invalid {
+  background-color: rgba(255, 0, 0, 0.075);
+  border-color: rgb(252, 98, 98) !important;
+}
+@media only screen and (max-width: 600px) {
+  .authentification-form {
+    width:80%;
+  }
 }

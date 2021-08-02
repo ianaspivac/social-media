@@ -91,3 +91,8 @@
   animation-name: message;
   animation-duration: 4s;
 }
+@media only screen and (max-width: 600px) {
+  .post-form__container {
+    width:80%;
+  }
+}
