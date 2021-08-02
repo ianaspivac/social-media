@@ -3,6 +3,7 @@ import PostCard from "../Post/PostCard";
 import { useLocation } from "react-router";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Loader from "react-loader-spinner";
 const ProfilePosts = (props) => {
   const location = useLocation();
   const userId = localStorage.getItem("userId");
@@ -64,6 +65,12 @@ const ProfilePosts = (props) => {
       ownProfile={props.ownProfile}
     />
   )).reverse();
-  return <div>{!loading ? postList : <p>Loading...</p>}</div>;
+  return <div className="post-list-container">{!loading ? postList : <Loader 
+    type="TailSpin"
+    color="#585d99"
+    height={100}
+    width={100}
+  
+  />}</div>;
 };
 export default ProfilePosts;

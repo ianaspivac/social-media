@@ -2,6 +2,7 @@ import "./PostList.css";
 import PostCard from "./PostCard";
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
+import Loader from "react-loader-spinner";
 const PostList = (props) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,6 +85,11 @@ const PostList = (props) => {
       likes={post.likes}
     />
   )).reverse();
-  return <div>{!loading ? <div>{postList}</div> : <p>Loading...</p>}</div>;
+  return <div className="post-list-container">{!loading ? <div>{postList}</div> : <Loader 
+  type="TailSpin"
+  color="#585d99"
+  height={100}
+  width={100}
+/>}</div>;
 };
 export default PostList;
