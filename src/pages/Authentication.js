@@ -3,6 +3,6 @@ import Signup from "../components/Authentification/Signup";
 import { useLocation } from "react-router-dom";
 const Authentification = () => {
   const location = useLocation();
-  return <div>{location.pathname === "/login" ? <Login /> : <Signup />}</div>;
+  return <div>{location.pathname === "/social-media/login" ? <Login /> : <Signup />}</div>;
 };
 export default Authentification;

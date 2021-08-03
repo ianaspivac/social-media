@@ -124,7 +124,7 @@ const ProfileInfo = (props) => {
       <div className="profile-image-side">
         <div className="profile-image">
           {!loading ? <img src={photoUrl} alt="avatar" /> : <p>Loading...</p>}
-          {location.pathname === "/profile" && (
+          {location.pathname === "/social-media/profile" && (
             <div className="profile-image-photo-edit">
               {isPhotoEdit ? (
                 <input
@@ -166,12 +166,12 @@ const ProfileInfo = (props) => {
       </div>
       <div className="profile-info">
         <div className="profile-edit-name">
-          {isEditing && location.pathname === "/profile" ? (
+          {isEditing && location.pathname === "/social-media/profile" ? (
             <input type="text" value={enteredName} onChange={nameHandler} />
           ) : (
             <div className="profile-name">{displayName}</div>
           )}
-          {location.pathname === "/profile" && (
+          {location.pathname === "/social-media/profile" && (
             <div>
               {isEditing ? (
                 <div className="profile-edit-name-buttons-div">

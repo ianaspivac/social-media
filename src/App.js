@@ -14,50 +14,50 @@ function App() {
     <main>
       <Header />
       <Switch>
-        <Route path="/" exact>
+        <Route path="/social-media" exact>
           {!isLoggedIn && (
-            <Redirect to="/login">
+            <Redirect to="/social-media/login">
               <Authentification />
             </Redirect>
           )}
           {isLoggedIn && (
-            <Redirect to="/feed">
+            <Redirect to="/social-media/feed">
               <Feed />
             </Redirect>
           )}
         </Route>
         {!isLoggedIn && (
-          <Route path="/login">
+          <Route path="/social-media/login">
             <Authentification />
           </Route>
         )}
         {!isLoggedIn && (
-          <Route path="/signup">
+          <Route path="/social-media/signup">
             <Authentification />
           </Route>
         )}
          {isLoggedIn && (
-          <Route path="/profile">
+          <Route path="/social-media/profile">
            <Profile/>
           </Route>
         )}
         {isLoggedIn && (
-          <Route path="/feed">
+          <Route path="/social-media/feed">
             <Feed />
           </Route>
         )}
         {isLoggedIn && (
-          <Route path={`/user/${userId}`}>
-            <Redirect to="/profile" />
+          <Route path={`/social-media/user/${userId}`}>
+            <Redirect to="/social-media/profile" />
           </Route>
         )}
          {isLoggedIn && (
-          <Route path="/user">
+          <Route path="/social-media/user">
             <Profile/>
           </Route>
         )}
         <Route path="*">
-          <Redirect to="/" />
+          <Redirect to="/social-media" />
         </Route>
       </Switch>
     </main>

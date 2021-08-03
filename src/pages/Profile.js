@@ -19,10 +19,10 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const token = localStorage.getItem("token");
-  const currentUserId = location.pathname.slice(6, location.pathname.length);
+  const currentUserId = location.pathname.slice(14, location.pathname.length);
 
   useEffect(() => {
-    if (location.pathname !== "/profile") {
+    if (location.pathname !== "/social-media/profile") {
       setLoading(true);
       fetch(
         `https://react-http-560ff-default-rtdb.firebaseio.com/users/${currentUserId}.json?auth=${token}`
@@ -57,7 +57,7 @@ const Profile = () => {
   return (
     <div>
       {!loading ? (
-        location.pathname === "/profile" ?  <ProfileInfo
+        location.pathname === "/social-media/profile" ?  <ProfileInfo
         displayName={userDisplayName }
         email={localStorage.getItem("email") }
         photoUrl={localStorage.getItem("photoUrl") }
@@ -73,7 +73,7 @@ const Profile = () => {
 
       {!loading ? (
         <div>
-          {location.pathname === "/profile" ? (
+          {location.pathname === "/social-media/profile" ? (
             <ProfilePosts displayName={userDisplayName} ownProfile={true} />
           ) : (
             <ProfilePosts

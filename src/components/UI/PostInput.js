@@ -31,8 +31,7 @@ const PostInput = (props) => {
     if (file && file.length > 0) {
       console.log(URL.createObjectURL(file[0]));
       let fileUpload = file[0];
-      //const existingFiles = data.fileList.map((f) => f.name);
-      //files = files.filter((f) => !existingFiles.includes(f.name));
+
       dispatch({ type: "ADD_FILE", fileUpload });
       dispatch({ type: "SET_DROP_DEPTH", dropDepth: 0 });
       dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: false });

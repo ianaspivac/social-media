@@ -87,7 +87,7 @@ const PostCard = (props) => {
     displayPost && (
       <div className="post-card">
         <div className="post-card__heading">
-          <Link to={`/user/${props.userId}`}>{props.displayName}</Link>
+          <Link to={`/social-media/user/${props.userId}`}>{props.displayName}</Link>
           <div>
             {props.ownProfile && (
               <button

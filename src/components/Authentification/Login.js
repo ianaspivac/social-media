@@ -37,7 +37,7 @@ const Login = () => {
         {isPasswordValid && <p className="authentification-form__invalid">Invalid password</p>}
         <div className="authentification-form__actions">
           <input type="submit" className="authentification-form__submit" value="Sign in" />
-          <Link to="/signup" className="authentification-form__link">Create account</Link>
+          <Link to="/social-media/signup" className="authentification-form__link">Create account</Link>
         </div>
       </div>
     </form>

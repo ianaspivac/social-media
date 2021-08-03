@@ -37,13 +37,13 @@ const Header = () => {
         <ul className={`header-nav-list ${!showMenu && isLoggedIn ? 'hide-menu' : ''} ${isLoggedIn ? 'header-nav-list-logged' : ''}`}>
           {isLoggedIn && (
             <li className="header-nav-feed ">
-              <Link to="/feed">Feed</Link>
+              <Link to="/social-media/feed">Feed</Link>
             </li>
           )}
           {isLoggedIn &&
             (!loading ? (
               <li>
-                <Link to="/profile" className="header-nav-profile">
+                <Link to="/social-media/profile" className="header-nav-profile">
                   <div className="header-div-avatar">
                     <img src={photoUrl} />
                   </div>
@@ -62,12 +62,12 @@ const Header = () => {
           )}
           {!isLoggedIn && (
             <li className="header-nav-login">
-              <Link to="/login">Login</Link>
+              <Link to="/social-media/login">Login</Link>
             </li>
           )}
           {!isLoggedIn && (
             <li className="header-nav-signup">
-              <Link to="/signup">Sign up</Link>
+              <Link to="/social-media/signup">Sign up</Link>
             </li>
           )}
         </ul>

@@ -159,7 +159,7 @@ const useAuth = () => {
           console.log(err.message);
         });
     }
-    history.replace("/feed");
+    history.replace("/social-media/feed");
   };
   const logout = useCallback(() => {
     localStorage.clear();
@@ -169,7 +169,7 @@ const useAuth = () => {
     }
   }, [logoutTimer, dispatch]);
 
-  //need to fix warning
+ 
   useEffect(() => {
     if (duration) {
       setLogoutTimer(setTimeout(logout, duration));

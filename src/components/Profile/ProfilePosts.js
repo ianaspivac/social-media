@@ -12,6 +12,7 @@ const ProfilePosts = (props) => {
   const [loading, setLoading] = useState(true);
   let likesList = [];
   let likeInfo = [];
+
   useEffect(() => { 
     setLoading(true);
     fetch(`https://react-http-560ff-default-rtdb.firebaseio.com/liked.json`)
@@ -19,7 +20,7 @@ const ProfilePosts = (props) => {
       .then((data) => {
         likeInfo = data;
       });
-    if (location.pathname === "/profile") {
+    if (location.pathname === "/social-media/profile") {
       return fetchPosts(userId);    
     } else {
       const currentUserId = props.currentUserId;

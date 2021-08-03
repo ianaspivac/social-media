@@ -77,7 +77,7 @@ const Signup = () => {
         {matchPass && <p className="authentification-form__invalid">Passwords do not match</p>}
         <div className="authentification-form__actions">
           <input type="submit" value="Sign up" className="authentification-form__submit" disabled={disable} />
-          <Link to="/login" className="authentification-form__link">Have account already?</Link>
+          <Link to="/social-media/login" className="authentification-form__link">Have account already?</Link>
         </div>
       </div>
     </form>
