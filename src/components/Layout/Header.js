@@ -37,7 +37,7 @@ const Header = () => {
         <ul className={`header-nav-list ${!showMenu && isLoggedIn ? 'hide-menu' : ''} ${isLoggedIn ? 'header-nav-list-logged' : ''}`}>
           {isLoggedIn && (
             <li className="header-nav-feed ">
-              <Link to="/social-media/feed">Feed</Link>
+              <Link to="/social-media/feed">Home</Link>
             </li>
           )}
           {isLoggedIn &&
