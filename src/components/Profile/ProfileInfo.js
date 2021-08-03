@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import firebase from "../../Firebase/Firebase";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import Filter from 'bad-words';
 
 const ProfileInfo = (props) => {
   const location = useLocation();
@@ -20,13 +21,14 @@ const ProfileInfo = (props) => {
   const [isPhotoEdit, setIsPhotoEdit] = useState(false);
   const [isPhotoAdded, setIsPhotoAdded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [prohibited, setProhibited] = useState(false);
   const [isEnteredNameValid, setIsEnteredNameValid] = useState(true);
 
   useEffect(() => {
     setDisplayName(props.displayName);
     setEmail(props.email);
     setPhotoUrl(props.photoUrl);
-  }, [props.displayName,props.photoUrl,props.email]);
+  }, [props.displayName, props.photoUrl, props.email]);
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -86,16 +88,27 @@ const ProfileInfo = (props) => {
           res.json().then((data) => {});
         }
       })
-      .then((data) => {dispatch({
-        type: "SET_USER_INFO",
-        payload: { displayName: localStorage.getItem("displayName"), photoUrl:localStorage.getItem("photoUrl") },
-      });})
+      .then((data) => {
+        dispatch({
+          type: "SET_USER_INFO",
+          payload: {
+            displayName: localStorage.getItem("displayName"),
+            photoUrl: localStorage.getItem("photoUrl"),
+          },
+        });
+      })
       .catch((err) => {
         console.log(err.message);
       });
   };
 
   const nameSaveHandler = () => {
+    setProhibited(false);
+    var filter = new Filter(); 
+    if (filter.isProfane(enteredName)) {
+      setProhibited(true);
+      return;
+    }
     if (!validateEnteredName(enteredName)) {
       setIsEnteredNameValid(false);
       return;
@@ -115,7 +128,7 @@ const ProfileInfo = (props) => {
     fetchEditedData({
       photoUrl,
     });
-    
+
     setIsPhotoEdit(false);
   };
 
@@ -202,6 +215,11 @@ const ProfileInfo = (props) => {
         {isEditing && !isEnteredNameValid && (
           <p div className="profile-name-error">
             Name has to be shorter than 20 characters and atleast 1 character.
+          </p>
+        )}
+        {prohibited && (
+          <p div className="profile-name-error">
+            Innapproriate name
           </p>
         )}
         <div className="profile-email">{email}</div>

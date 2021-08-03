@@ -54,12 +54,14 @@ const useAuth = () => {
             if (data.error.message === "INVALID_PASSWORD") {
               dispatch({ type: "INVALID_PASSWORD", boolean: true });
             }
+            if (data.error.message === "TOO_MANY_ATTEMPTS_TRY_LATER"){
+              dispatch({type:"TOO_MANY_ATTEMPTS_TRY_LATER", boolean: true})
+            }
             console.log(data.error);
           });
         }
       })
       .then((data) => {
-        
         dispatch({
           type: "LOGIN",
           payload: {
@@ -79,8 +81,8 @@ const useAuth = () => {
         const remainingTime = calculateRemainingTime(expirationTime);
 
         setLogoutTimer(setTimeout(logout, remainingTime));
-        
-        return fetchProfileInfo(data.idToken, data.localId, data.email, url);
+
+        fetchProfileInfo(data.idToken, data.localId, data.email, url);
       })
       .catch((err) => {
         console.log(err.message);
@@ -153,7 +155,7 @@ const useAuth = () => {
             type: "SET_USER_INFO",
             payload: { displayName: data.displayName, photoUrl: photo },
           });
-
+          return history.replace("/feed");
         })
         .catch((err) => {
           console.log(err.message);

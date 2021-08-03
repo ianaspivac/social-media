@@ -9,7 +9,7 @@ const Profile = () => {
   const [photoUrl, setPhotoUrl] = useState(
     useSelector((state) => state.userInfo.photoUrl)
   );
-  const userDisplayName=useSelector((state) => state.userInfo.displayName);
+  const userDisplayName = useSelector((state) => state.userInfo.displayName);
   const [displayName, setDisplayName] = useState(
     useSelector((state) => state.userInfo.displayName)
   );
@@ -48,10 +48,9 @@ const Profile = () => {
         .catch((err) => {
           console.log(err.message);
         });
-    } 
-   else{
-     setLoading(false);
-   }
+    } else {
+      setLoading(false);
+    }
   }, [location, currentUserId, token]);
 
   return (
@@ -79,6 +78,7 @@ const Profile = () => {
             <ProfilePosts
               currentUserId={currentUserId}
               displayName={displayName}
+              photoUrl={photoUrl}
               ownProfile={false}
             />
           )}

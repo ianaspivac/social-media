@@ -3,6 +3,7 @@ import heart from "../../assets/images/heart.svg";
 import "./PostCard.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Comments from "../UI/Comments";
 const PostCard = (props) => {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -107,12 +108,17 @@ const PostCard = (props) => {
             </div>
           )}
         </div>
+        <div className="post-card__actions">
         <div className="post-card__likes">
           <button onClick={likeHandler}>
             <img src={heart} className={isLiked ? "liked" : ""} />
           </button>
-          {props.likes && likesQuantity}
+          <div>{props.likes && likesQuantity}</div>
+          
         </div>
+        <Comments postId={props.id}/>
+        </div>
+        
       </div>
     )
   );

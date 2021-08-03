@@ -22,6 +22,7 @@ const PostList = (props) => {
           usersInfo.push({
             id: user,
             displayName: data[user].displayName,
+            photoUrl:data[user].photoUrl
           });
         }
         return  fetch(`https://react-http-560ff-default-rtdb.firebaseio.com/liked.json`)
@@ -52,6 +53,7 @@ const PostList = (props) => {
                 id: key,
                 userId: uid,
                 displayName: currentUserId.displayName,
+                photoUrl: currentUserId.photoUrl,
                 likes: likesList,
               });
              
@@ -80,6 +82,7 @@ const PostList = (props) => {
       imageURL={post.imageURL}
       userId={post.userId}
       displayName={post.displayName}
+      photoUrl={post.photoUrl}
       likes={post.likes}
     />
   )).reverse();

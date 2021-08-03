@@ -12,6 +12,7 @@ const initialState = {
   isErrorEmailExists: false,
   isPasswordValid: false,
   isErrorEmailNotFound: false,
+  tooManyAttempts: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -20,19 +21,21 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userInfo: {
+          ...state.userInfo,
           token: action.payload.token,
           userId: action.payload.userId,
-          email: action.payload.email
+          email: action.payload.email,
         },
         isLoggedIn: true,
       };
-      case "SET_USER_INFO":
+    case "SET_USER_INFO":
       return {
         ...state,
         userInfo: {
+          ...state.userInfo,
           photoUrl: action.payload.photoUrl,
           displayName: action.payload.displayName,
-        }
+        },
       };
     case "LOGOUT":
       return {
@@ -47,7 +50,7 @@ const authReducer = (state = initialState, action) => {
         isLoggedIn: false,
       };
     case "CHANGE_NAME":
-      return {...state,displayName:action.displayName};
+      return { ...state, displayName: action.displayName };
     case "EMAIL_EXISTS":
       return {
         ...state,
@@ -60,6 +63,8 @@ const authReducer = (state = initialState, action) => {
       };
     case "INVALID_PASSWORD":
       return { ...state, isPasswordValid: action.boolean };
+    case "TOO_MANY_ATTEMPTS_TRY_LATER":
+      return { ...state, tooManyAttempts: action.boolean };
     default:
       return state;
   }
