@@ -9,7 +9,7 @@ const Profile = () => {
   const [photoUrl, setPhotoUrl] = useState(
     useSelector((state) => state.userInfo.photoUrl)
   );
-  const userDisplayName=useSelector((state) => state.userInfo.displayName);
+  const userDisplayName = useSelector((state) => state.userInfo.displayName);
   const [displayName, setDisplayName] = useState(
     useSelector((state) => state.userInfo.displayName)
   );
@@ -48,25 +48,27 @@ const Profile = () => {
         .catch((err) => {
           console.log(err.message);
         });
-    } 
-   else{
-     setLoading(false);
-   }
+    } else {
+      setLoading(false);
+    }
   }, [location, currentUserId, token]);
 
   return (
     <div>
       {!loading ? (
-        location.pathname === "/profile" ?  <ProfileInfo
-        displayName={userDisplayName }
-        email={localStorage.getItem("email") }
-        photoUrl={localStorage.getItem("photoUrl") }
-      /> :
-        <ProfileInfo
-          displayName={displayName }
-          email={email }
-          photoUrl={photoUrl }
-        />
+        location.pathname === "/profile" ? (
+          <ProfileInfo
+            displayName={userDisplayName}
+            email={localStorage.getItem("email")}
+            photoUrl={localStorage.getItem("photoUrl")}
+          />
+        ) : (
+          <ProfileInfo
+            displayName={displayName}
+            email={email}
+            photoUrl={photoUrl}
+          />
+        )
       ) : (
         <p>Loading</p>
       )}
@@ -74,11 +76,16 @@ const Profile = () => {
       {!loading ? (
         <div>
           {location.pathname === "/profile" ? (
-            <ProfilePosts displayName={userDisplayName} ownProfile={true} />
+            <ProfilePosts
+              displayName={userDisplayName}
+              ownProfile={true}
+              photoUrl={localStorage.getItem("photoUrl")}
+            />
           ) : (
             <ProfilePosts
               currentUserId={currentUserId}
               displayName={displayName}
+              photoUrl={photoUrl}
               ownProfile={false}
             />
           )}

@@ -1,10 +1,9 @@
-import { useRef, useState, useReducer, useEffect } from "react";
+import { useState, useReducer, useEffect } from "react";
 import { useSelector } from "react-redux";
 import firebase from "../../Firebase/Firebase";
 import "./PostForm.css";
+//import { profanity } from '@2toad/profanity';
 import PostInput from "../UI/PostInput";
-import { useHistory } from "react-router-dom";
-import ProfilePosts from "../Profile/ProfilePosts";
 const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_TEXT":
@@ -63,7 +62,10 @@ const PostForm = (props) => {
       setNrChars(text.length);
       return;
     }
-
+    //if(profanity.exists(text)){
+    //  console.log("bad");
+    //  return;
+   // }
     if (file.name) {
       var storage = firebase.storage();
       var storageRef = storage.ref();

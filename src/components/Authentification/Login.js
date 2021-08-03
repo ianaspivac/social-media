@@ -11,6 +11,7 @@ const Login = () => {
   
   const isEmailExistent = useSelector((state) => state.isErrorEmailNotFound);
   const isPasswordValid = useSelector((state) => state.isPasswordValid);
+  const attempts =useSelector((state) => state.tooManyAttempts);
 
   const loginHandler = (event) => {
     event.preventDefault();
@@ -18,6 +19,7 @@ const Login = () => {
     const enteredPassword = passwordInputRef.current.value;
     dispatch({type:'EMAIL_NOT_FOUND',boolean:false});
     dispatch({type:'INVALID_PASSWORD',boolean:false});
+    dispatch({type:'TOO_MANY_ATTEMPTS_TRY_LATER',boolean:false});
     login(
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI",
       enteredEmail,
@@ -35,6 +37,7 @@ const Login = () => {
         {isEmailExistent && <p className="authentification-form__invalid">Invalid email</p>}
         <input className={isPasswordValid ? 'invalid' : ''}  type="password" ref={passwordInputRef} placeholder="Password" required />
         {isPasswordValid && <p className="authentification-form__invalid">Invalid password</p>}
+        {attempts && <p className="authentification-form__invalid">Too many failed attempts, try again later.</p>}
         <div className="authentification-form__actions">
           <input type="submit" className="authentification-form__submit" value="Sign in" />
           <Link to="/signup" className="authentification-form__link">Create account</Link>

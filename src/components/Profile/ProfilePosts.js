@@ -46,6 +46,7 @@ const ProfilePosts = (props) => {
             imageURL: data[key].imageURL,
             userId: uid,
             displayName: props.displayName,
+            photoUrl: props.photoUrl,
             likes: likesList,
           });
         }
@@ -61,6 +62,7 @@ const ProfilePosts = (props) => {
       imageURL={post.imageURL}
       userId={post.userId}
       displayName={post.displayName}
+      photoUrl={post.photoUrl}
       likes={post.likes}
       ownProfile={props.ownProfile}
     />

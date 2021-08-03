@@ -10,7 +10,10 @@
 }
 .post-card__likes {
   width: 30px;
+  height: 30px;
   display: flex;
+  justify-content: center;
+  font-size:17px;
 }
 .post-card__likes button {
   cursor: pointer;
@@ -58,6 +61,17 @@
 }
 .post-card__heading__delete:hover {
   color: rgb(223, 100, 100);
+}
+.post-card__avatar{
+  width:30px;
+  height:30px;
+  object-fit: cover;
+  border-radius: 100%;
+  margin-right:10px;
+}
+.post-card__actions{
+  display: flex;
+ 
 }
 @media only screen and (max-width: 600px) {
   .post-card {
