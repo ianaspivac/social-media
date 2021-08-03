@@ -88,7 +88,10 @@ const PostCard = (props) => {
     displayPost && (
       <div className="post-card">
         <div className="post-card__heading">
-          <Link to={`/social-media/user/${props.userId}`}>{props.displayName}</Link>
+          <Link to={`/social-media/user/${props.userId}`}>
+            <img className="post-card__avatar" src={props.photoUrl} />
+            {props.displayName}
+          </Link>
           <div>
             {props.ownProfile && (
               <button
@@ -109,14 +112,14 @@ const PostCard = (props) => {
           )}
         </div>
         <div className="post-card__actions">
-        <div className="post-card__likes">
-          <button onClick={likeHandler}>
-            <img src={heart} className={isLiked ? "liked" : ""} />
-          </button>
-          <div>{props.likes && likesQuantity}</div>         
+          <div className="post-card__likes">
+            <button onClick={likeHandler}>
+              <img src={heart} className={isLiked ? "liked" : ""} />
+            </button>
+            <div>{props.likes && likesQuantity}</div>
+          </div>
+          <Comments id={props.id} />
         </div>
-        <Comments id={props.id}/>
-        </div>      
       </div>
     )
   );

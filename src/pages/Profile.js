@@ -56,16 +56,19 @@ const Profile = () => {
   return (
     <div>
       {!loading ? (
-        location.pathname === "/social-media/profile" ?  <ProfileInfo
-        displayName={userDisplayName }
-        email={localStorage.getItem("email") }
-        photoUrl={localStorage.getItem("photoUrl") }
-      /> :
-        <ProfileInfo
-          displayName={displayName }
-          email={email }
-          photoUrl={photoUrl }
-        />
+        location.pathname === "/social-media/profile" ? (
+          <ProfileInfo
+            displayName={userDisplayName}
+            email={localStorage.getItem("email")}
+            photoUrl={localStorage.getItem("photoUrl")}
+          />
+        ) : (
+          <ProfileInfo
+            displayName={displayName}
+            email={email}
+            photoUrl={photoUrl}
+          />
+        )
       ) : (
         <p>Loading</p>
       )}
@@ -73,7 +76,11 @@ const Profile = () => {
       {!loading ? (
         <div>
           {location.pathname === "/social-media/profile" ? (
-            <ProfilePosts displayName={userDisplayName} ownProfile={true} />
+            <ProfilePosts
+              displayName={userDisplayName}
+              photoUrl={localStorage.getItem("photoUrl")}
+              ownProfile={true}
+            />
           ) : (
             <ProfilePosts
               currentUserId={currentUserId}
