@@ -113,12 +113,10 @@ const PostCard = (props) => {
           <button onClick={likeHandler}>
             <img src={heart} className={isLiked ? "liked" : ""} />
           </button>
-          <div>{props.likes && likesQuantity}</div>
-          
+          <div>{props.likes && likesQuantity}</div>         
         </div>
-        <Comments postId={props.id}/>
-        </div>
-        
+        <Comments id={props.id}/>
+        </div>      
       </div>
     )
   );

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import textBubble from "../../assets/images/text-bubble.svg";
 import Filter from "bad-words";
+import Loader from "react-loader-spinner";
 
 const Comments = (props) => {
   const [commentsShow, setCommentsShow] = useState(false);
@@ -12,9 +13,11 @@ const Comments = (props) => {
   const photoUrl = useSelector((state) => state.userInfo.photoUrl);
   const [commentsList, setCommentsList] = useState([]);
   const [textComment, setTextComment] = useState("");
-  const [loaded, setLoaded] = useState(false);
+
   const [nrChars, setNrChars] = useState(0);
   const [prohibited, setProhibited] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadedComments, setLoadedComments] = useState(false);
 
   const toggleCommentsHandler = () => {
     setCommentsShow((commentsShow) => !commentsShow);
@@ -22,9 +25,10 @@ const Comments = (props) => {
   useEffect(() => {
     let usersInfo = {};
     let commentInfo = [];
-    if (commentsShow && !loaded) {
+    if (commentsShow && !loadedComments) {
+      setLoading(true);
       fetch(
-        `https://react-http-560ff-default-rtdb.firebaseio.com/comments.json`
+        `https://react-http-560ff-default-rtdb.firebaseio.com/comments/${props.id}.json`
       )
         .then((res) => {
           if (res.ok) {
@@ -36,20 +40,19 @@ const Comments = (props) => {
           }
         })
         .then((data) => {
-          for (const postId in data) {
-            for (const userId in data[postId]) {
-              let comments = [];
-              for (const userPost in data[postId][userId]) {
-                comments.push(data[postId][userId][userPost].comment);
-              }
-              commentInfo.push({
-                userId,
-                comments,
-                displayName: "",
-                photoUrl: "",
-              });
+          for (const userId in data) {
+            let comments = [];
+            for (const userPost in data[userId]) {
+              comments.push(data[userId][userPost].comment);
             }
+            commentInfo.push({
+              userId,
+              comments,
+              displayName: "",
+              photoUrl: "",
+            });
           }
+
           return fetch(
             `https://react-http-560ff-default-rtdb.firebaseio.com/users.json`
           )
@@ -77,9 +80,11 @@ const Comments = (props) => {
                 commentInfo[userIndex].photoUrl = usersInfo[userId].photoUrl;
               }
               setCommentsList(commentInfo);
+              setLoading(false);
+              setLoadedComments(true);
+              console.log(commentInfo)
             });
         });
-      setLoaded(true);
     }
   }, [commentsShow]);
   const onKeyUp = (event) => {
@@ -98,7 +103,6 @@ const Comments = (props) => {
         setNrChars(commentData.length);
         return;
       }
-
       //displayName will not be sent to fetch only used localy when comment is created
       fetch(
         `https://react-http-560ff-default-rtdb.firebaseio.com/comments/${props.postId}/${uid}.json?auth=${token}`,
@@ -141,50 +145,53 @@ const Comments = (props) => {
       >
         <img src={textBubble} />
       </button>
-      {commentsShow && (
-        <div className="comments-section__container">
-          <ul className="comments-section__list">
-            {commentsList.map((comment) =>
-              comment.comments.map((text) => (
-                <li>
-                  <div>
-                    <div className="comments-section__user-info">
-                      <img
-                        className="comments-section__avatar"
-                        src={comment.photoUrl}
-                      />
-                      <div>{comment.displayName}</div>
+      {commentsShow &&
+        (loading ? (
+          <Loader type="ThreeDots" color="#585d99" height={50} width={50} />
+        ) : (
+          <div className="comments-section__container">
+            <ul className="comments-section__list">
+              {commentsList.map((comment) =>
+                comment.comments.map((text) => (
+                  <li>
+                    <div>
+                      <div className="comments-section__user-info">
+                        <img
+                          className="comments-section__avatar"
+                          src={comment.photoUrl}
+                        />
+                        <div>{comment.displayName}</div>
+                      </div>
+                      <div className="comments-section__comment">{text}</div>
                     </div>
-                    <div className="comments-section__comment">{text}</div>
-                  </div>
-                </li>
-              ))
+                  </li>
+                ))
+              )}
+            </ul>
+            <textarea
+              onKeyPress={onKeyUp}
+              onChange={(e) => {
+                setTextComment(e.target.value);
+                setNrChars(0);
+              }}
+              placeholder="Write a comment..."
+              value={textComment}
+              className="comments-section__container__write"
+              rows="4"
+              columns="50"
+            ></textarea>
+            {nrChars > 300 && (
+              <p className="comments-section__warning">
+                Comment should be less than 300 chars,you have {nrChars}
+              </p>
             )}
-          </ul>
-          <textarea
-            onKeyPress={onKeyUp}
-            onChange={(e) => {
-              setTextComment(e.target.value);
-              setNrChars(0);
-            }}
-            placeholder="Write a comment..."
-            value={textComment}
-            className="comments-section__container__write"
-            rows="4"
-            columns="50"
-          ></textarea>
-          {nrChars > 300 && (
-            <p className="comments-section__warning">
-              Comment should be less than 300 chars,you have {nrChars}
-            </p>
-          )}
-          {prohibited && (
-            <p className="comments-section__warning">
-              Innapropriate language
-            </p>
-          )}
-        </div>
-      )}
+            {prohibited && (
+              <p className="comments-section__warning">
+                Innapropriate language
+              </p>
+            )}
+          </div>
+        ))}
     </div>
   );
 };

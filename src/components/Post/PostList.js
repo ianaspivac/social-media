@@ -62,10 +62,7 @@ const PostList = (props) => {
           setPosts(loadedPosts);;
           });
         });
-      });
-   
-     
-    
+      });  
   }, []);
 
   useEffect(() => {
