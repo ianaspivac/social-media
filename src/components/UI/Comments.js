@@ -105,7 +105,7 @@ const Comments = (props) => {
       }
       //displayName will not be sent to fetch only used localy when comment is created
       fetch(
-        `https://react-http-560ff-default-rtdb.firebaseio.com/comments/${props.postId}/${uid}.json?auth=${token}`,
+        `https://react-http-560ff-default-rtdb.firebaseio.com/comments/${props.id}/${uid}.json?auth=${token}`,
         {
           method: "POST",
           body: JSON.stringify({ comment: commentData }),
