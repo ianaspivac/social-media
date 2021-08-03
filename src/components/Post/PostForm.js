@@ -2,7 +2,7 @@ import { useState, useReducer, useEffect } from "react";
 import { useSelector } from "react-redux";
 import firebase from "../../Firebase/Firebase";
 import "./PostForm.css";
-//import { profanity } from '@2toad/profanity';
+import Filter from 'bad-words';
 import PostInput from "../UI/PostInput";
 const reducer = (state, action) => {
   switch (action.type) {
@@ -29,6 +29,7 @@ const PostForm = (props) => {
   const userId = useSelector((state) => state.userInfo.userId);
   const photoUrl = useSelector((state) => state.userInfo.photoUrl);
   const displayName = useSelector((state) => state.userInfo.displayName);
+  const [prohibited,setProhibited]=useState(false);
   const [loading, setLoading] = useState(true);
   const [sent, setSent] = useState(false);
   const [nrChars, setNrChars] = useState(0);
@@ -52,8 +53,10 @@ const PostForm = (props) => {
     }
   }, [photoUrl, displayName]);
   const postHandler = (event) => {
+    setProhibited(false);
     setNrChars(0);
     event.preventDefault();
+    var filter = new Filter(); 
     setSent(false);
     if (text.length < 1) {
       return;
@@ -62,10 +65,10 @@ const PostForm = (props) => {
       setNrChars(text.length);
       return;
     }
-    //if(profanity.exists(text)){
-    //  console.log("bad");
-    //  return;
-   // }
+    if(filter.isProfane(text)){
+      setProhibited(true);
+      return;
+    }
     if (file.name) {
       var storage = firebase.storage();
       var storageRef = storage.ref();
@@ -150,6 +153,7 @@ const PostForm = (props) => {
         {nrChars > 300 && (
           <p>Only 300 characters allowed, you have {nrChars}</p>
         )}
+        {prohibited && <p>Prohibited language!</p>}
         <input type="submit" className="post-form__submit" value="Post" />
       </form>
     </div>

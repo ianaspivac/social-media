@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "./AuthForm.css";
 import useAuth from "../../hooks/useAuth";
+import Filter from 'bad-words';
 const Signup = () => {
   const dispatch = useDispatch();
   const { login } = useAuth();
@@ -16,6 +17,7 @@ const Signup = () => {
   const [lengthPass, setLengthPass] = useState();
   const [validEmail, setValidEmail] = useState();
   const [disable, setDisable] = useState(false);
+  const [prohibited,setProhibited]=useState(false);
 
   const validatingForm = () => {
     var pattern = new RegExp(
@@ -32,6 +34,12 @@ const Signup = () => {
 
   const signupHandler = (event) => {
     event.preventDefault();
+    setProhibited(false);
+    var filter = new Filter();
+    if (filter.isProfane(email)){
+      setProhibited(true);
+      return;
+    }
     if (!disable) {
       login(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBSIZSdghkjvJ_8hJt-FAicfpHNpUAVsPI",
@@ -59,6 +67,7 @@ const Signup = () => {
         <input className={isEmailExistent || validEmail ? 'invalid': ''} type="email" value={email} onChange={emailHandler} required />
         {isEmailExistent && <p className="authentification-form__invalid">Email exists already</p>}
         {validEmail && <p className="authentification-form__invalid">Email is not valid</p>}
+        {prohibited && <p className="authentification-form__invalid">Innappropriate language</p>}
         <input className={lengthPass ? 'invalid': ''}
           type="password"
           value={password}

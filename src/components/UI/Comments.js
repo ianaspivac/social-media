@@ -2,6 +2,8 @@ import "./Comments.css";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import textBubble from "../../assets/images/text-bubble.svg";
+import Filter from "bad-words";
+
 const Comments = (props) => {
   const [commentsShow, setCommentsShow] = useState(false);
   const uid = useSelector((state) => state.userInfo.userId);
@@ -11,7 +13,9 @@ const Comments = (props) => {
   const [commentsList, setCommentsList] = useState([]);
   const [textComment, setTextComment] = useState("");
   const [loaded, setLoaded] = useState(false);
-  const [nrChars,setNrChars]=useState(0);
+  const [nrChars, setNrChars] = useState(0);
+  const [prohibited, setProhibited] = useState(false);
+
   const toggleCommentsHandler = () => {
     setCommentsShow((commentsShow) => !commentsShow);
   };
@@ -81,6 +85,12 @@ const Comments = (props) => {
   const onKeyUp = (event) => {
     if (event.key === "Enter") {
       let commentData = event.target.value;
+      var filter = new Filter();
+      setProhibited(false);
+      if (filter.isProfane(commentData)) {
+        setProhibited(true);
+        return;
+      }
       if (commentData.length < 1) {
         return;
       }
@@ -153,14 +163,26 @@ const Comments = (props) => {
           </ul>
           <textarea
             onKeyPress={onKeyUp}
-            onChange={(e) => {setTextComment(e.target.value);setNrChars(0)}}
+            onChange={(e) => {
+              setTextComment(e.target.value);
+              setNrChars(0);
+            }}
             placeholder="Write a comment..."
             value={textComment}
             className="comments-section__container__write"
             rows="4"
             columns="50"
           ></textarea>
-          {nrChars>300 && <p className="comments-section__warning">Comment should be less than 300 chars,you have {nrChars}</p>}
+          {nrChars > 300 && (
+            <p className="comments-section__warning">
+              Comment should be less than 300 chars,you have {nrChars}
+            </p>
+          )}
+          {prohibited && (
+            <p className="comments-section__warning">
+              Innapropriate language
+            </p>
+          )}
         </div>
       )}
     </div>
