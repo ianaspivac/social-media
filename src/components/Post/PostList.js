@@ -59,15 +59,15 @@ const PostList = (props) => {
              
             }
           }   
-          setPosts(loadedPosts);;
+          setPosts(loadedPosts);
+          setLoading(false);
           });
         });
       });  
   }, []);
 
   useEffect(() => {
-    fetchPostsHandler();
-    setLoading(false);
+    fetchPostsHandler(); 
   }, [fetchPostsHandler,props.toggleNewPost]);
  
 
