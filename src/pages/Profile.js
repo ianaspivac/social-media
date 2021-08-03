@@ -19,7 +19,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const token = localStorage.getItem("token");
-  const currentUserId = location.pathname.slice(14, location.pathname.length);
+  const currentUserId = location.pathname.slice(19, location.pathname.length);
 
   useEffect(() => {
     if (location.pathname !== "/social-media/profile") {
