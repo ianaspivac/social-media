@@ -57,7 +57,7 @@ function App() {
           </Route>
         )}
         <Route path="*">
-          <Redirect to = "/index.html" />
+          <Redirect to="/social-media" />
         </Route>
       </Switch>
     </main>
