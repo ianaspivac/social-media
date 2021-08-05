@@ -15,6 +15,7 @@ this applicaion useses Firebase features as Realtime Database and Storage in ord
 ## Limitations and Warnings
 
 Being a serveless app, it has limited backend manipulations. It is not a complete product and it should be viewed only as a sketch, it is a vulnerable app and the user should not expose personal data, having a violent behaviour and should avoid spamming posts.
+!Had some problem with deploy on github pages and currently on refresh it gives error, in this case just rewrite in the link bar:https://ianaspivac.github.io/social-media/
 
 ## Test
 
