@@ -82,7 +82,6 @@ const Comments = (props) => {
               setCommentsList(commentInfo);
               setLoading(false);
               setLoadedComments(true);
-              console.log(commentInfo)
             });
         });
     }

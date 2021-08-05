@@ -26,7 +26,7 @@ const ProfilePosts = (props) => {
       const currentUserId = props.currentUserId;
       return fetchPosts(currentUserId);   
     }
-  }, [fetch, props.displayName, displayName, userId]);
+  }, [fetch, props.displayName,props.photoUrl, displayName, userId]);
   const fetchPosts = (uid) => {
     let postList = [];
     fetch(

@@ -64,8 +64,7 @@ const Profile = () => {
           />
         ) : (
           <ProfileInfo
-            displayName={displayName}
-            email={email}
+            displayName={displayName}            
             photoUrl={photoUrl}
           />
         )

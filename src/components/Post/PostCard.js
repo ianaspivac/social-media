@@ -9,7 +9,7 @@ const PostCard = (props) => {
   const userId = localStorage.getItem("userId");
   const [isLiked, setIsLiked] = useState(false);
   const [likesQuantity, setLikesQuantity] = useState(
-    Object.keys(props.likes).length
+    0
   );
   const [userLikeId, setUserLikeId] = useState("");
   const [displayPost, setDisplayPost] = useState(true);
@@ -73,11 +73,12 @@ const PostCard = (props) => {
       return;
     }
   };
-  useEffect(() => {
+  useEffect(() => {  
     for (const user in props.likes) {
-      for (const likeId in props.likes[user]) {
+      setLikesQuantity(Object.keys(props.likes[0]).length)
+      for (const likeId in props.likes[user]) {    
         if (props.likes[user][likeId] === userId) {
-          setUserLikeId(likeId);
+          setUserLikeId(likeId);         
           setIsLiked(true);
           break;
         }
